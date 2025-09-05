@@ -1,0 +1,110 @@
+title: Morning Routine
+speaker: Jake
+text: Man, did you hit snooze a million times this morning or what?
+pt: Cara, você apertou o soneca um milhão de vezes esta manhã ou foi o quê?
+es: Hombre, ¿le pegaste al botón de snooze un millón de veces esta mañana o qué?
+
+speaker: Mike
+text: You know me too well. I swear my alarm was playing tricks on me.
+pt: Você me conhece bem demais. Juro que meu despertador estava pregando peças em mim.
+es: Me conoces demasiado bien. Juro que mi alarma me estaba jugando malas pasadas.
+
+speaker: Jake
+text: The struggle is real. Mornings sometimes feel like a battle I'm losing.
+pt: A luta é real. As manhãs às vezes parecem uma batalha que estou perdendo.
+es: La lucha es real. A veces las mañanas se sienten como una batalla que estoy perdiendo.
+
+speaker: Mike
+text: I tried getting up early, but somehow I stayed in bed scrolling aimlessly.
+pt: Tentei levantar cedo, mas de alguma forma fiquei na cama rolando a tela sem rumo.
+es: Intenté levantarme temprano, pero de alguna manera me quedé en la cama scrolleando sin rumbo.
+
+speaker: Jake
+text: Same here. I think I picked up a bad habit of procrastinating mornings.
+pt: Idem aqui. Acho que peguei um mau hábito de procrastinar as manhãs.
+es: Igual aquí. Creo que agarré el mal hábito de procrastinar las mañanas.
+
+speaker: Mike
+text: Coffee helps, though. I'd be useless without my morning cup.
+pt: Mas o café ajuda. Eu seria inútil sem minha xícara matinal.
+es: Aunque el café ayuda. Sería inútil sin mi taza matinal.
+
+speaker: Jake
+text: I need a triple shot before I start functioning properly.
+pt: Preciso de um triplo espresso antes de começar a funcionar direito.
+es: Necesito un triple shot antes de empezar a funcionar correctamente.
+
+speaker: Mike
+text: Haha, same. What about breakfast? Or you just run out the door like me?
+pt: Haha, igual. E o café da manhã? Ou você simplesmente sai correndo como eu?
+es: Jaja, igual. ¿Y el desayuno? ¿O sales disparado como yo?
+
+speaker: Jake
+text: Sometimes I manage a quick smoothie, but most days it's a granola bar on the go.
+pt: Às vezes eu faço um smoothie rápido, mas na maioria dos dias é uma barra de cereal no caminho.
+es: A veces me las arreglo con un smoothie rápido, pero la mayoría de los días es una barrita de granola al trote.
+
+speaker: Mike
+text: I'm more of a toaster pastry guy when I'm rushed. Guilty pleasure.
+pt: Eu sou mais do tipo pastry de torradeira quando estou com pressa. Prazer culposo.
+es: Yo soy más de pastelitos de tostadora cuando ando apurado. Un placer culposo.
+
+speaker: Jake
+text: Hey, whatever gets us going! Have you tried meditating in the mornings?
+pt: Ei, o que quer que funcione! Você já tentou meditar de manhã?
+es: ¡Oye, lo que sea que nos haga funcionar! ¿Has probado meditar en las mañanas?
+
+speaker: Mike
+text: Tried once... lasted about ten seconds before I fell asleep again.
+pt: Tentei uma vez... durou uns dez segundos antes de eu cair no sono de novo.
+es: Lo intenté una vez... duré como diez segundos antes de quedarme dormido otra vez.
+
+speaker: Jake
+text: Haha. I started with just five minutes of deep breathing—it actually helped with the stress.
+pt: Haha. Eu comecei com apenas cinco minutos de respiração profunda—até que ajudou com o estresse.
+es: Jaja. Yo empecé con solo cinco minutos de respiración profunda—en realidad ayudó con el estrés.
+
+speaker: Mike
+text: Maybe I should give that a shot instead of just hitting snooze repeatedly.
+pt: Talvez eu deva tentar isso em vez de ficar apertando o soneca repetidamente.
+es: Tal vez debería intentarlo en vez de solo apretar el snooze repetidamente.
+
+speaker: Jake
+text: Totally worth it. It sets a calm tone for the day despite the chaos ahead.
+pt: Vale totalmente a pena. Isso estabelece um tom calmo para o dia, apesar do caos que está por vir.
+es: Vale totalmente la pena. Le da un tono calmado al día a pesar del caos que se viene.
+
+speaker: Mike
+text: Speaking of chaos, how about the traffic jams? I sometimes spend more time commuting than sleeping.
+pt: Falando em caos, e os engarrafamentos? Às vezes passo mais tempo no commute do que dormindo.
+es: Hablando de caos, ¿y los tacos? A veces paso más tiempo viajando que durmiendo.
+
+speaker: Jake
+text: Oh man, commuting is its own nightmare. But hey, at least we're up and at 'em!
+pt: Ah, cara, o commute é um pesadelo à parte. Mas ei, pelo menos estamos de pé e na ativa!
+es: Ay, amigo, el viaje es una pesadilla aparte. Pero bueno, ¡al menos estamos activos y en la lucha!
+
+speaker: Mike
+text: True that. I feel more prepared already just talking about this.
+pt: Verdade. Já me sinto mais preparado só de falar sobre isso.
+es: Totalmente. Solo con hablar de esto ya me siento más preparado.
+
+speaker: Jake
+text: Small wins count. Here's to better mornings ahead, my friend.
+pt: Pequenas vitórias contam. Um brinde a manhãs melhores pela frente, meu amigo.
+es: Las pequeñas victorias cuentan. Brindemos por mejores mañanas, amigo.
+
+speaker: Mike
+text: Cheers to that, Jake! Tomorrow we go hard on the morning routine.
+pt: Um brinde a isso, Jake! Amanhã vamos com tudo na rotina matinal.
+es: ¡Salud por eso, Jake! Mañana le damos duro a la rutina matutina.
+
+speaker: Jake
+text: For sure. No more snooze abuse.
+pt: Com certeza. Chega de abusar do soneca.
+es: Seguro. Nada de abusar del snooze.
+
+speaker: Mike
+text: Ha! One step at a time. Ready for the challenge?
+pt: Ha! Um passo de cada vez. Pronto para o desafio?
+es: ¡Ja! De a un paso a la vez. ¿Listo para el desafío?

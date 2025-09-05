@@ -1,0 +1,110 @@
+title: Booking Flights
+speaker: Chloe
+text: Lucas, have you decided when you're booking your flight for the conference?
+pt: Lucas, você já decidiu quando vai reservar seu voo para a conferência?
+es: Lucas, ¿ya decidiste cuándo reservarás tu vuelo para la conferencia?
+
+speaker: Lucas
+text: Thinking about next Friday morning but prices are all over the place.
+pt: Pensando na próxima sexta de manhã, mas os preços estão uma loucura.
+es: Pensando en el viernes por la mañana, pero los precios están locos.
+
+speaker: Chloe
+text: Yeah, flight prices jump up and down like crazy. I usually set alerts on apps for good deals.
+pt: Sim, os preços dos voos sobem e descem loucamente. Costumo configurar alertas em apps para boas ofertas.
+es: Sí, los precios de los vuelos suben y bajan como locos. Suelo configurar alertas en apps para buenas ofertas.
+
+speaker: Lucas
+text: Good call. I tried once but missed the alert and had to pay double.
+pt: Boa ideia. Tentei uma vez, mas perdi o alerta e tive que pagar o dobro.
+es: Buena idea. Intenté una vez pero perdí la alerta y tuve que pagar el doble.
+
+speaker: Chloe
+text: Ouch! You gotta book fast when a deal pops up.
+pt: Ai! Tem que reservar rápido quando aparece uma promoção.
+es: ¡Ay! Tienes que reservar rápido cuando aparece una oferta.
+
+speaker: Lucas
+text: True. Do you prefer direct flights or don’t mind layovers?
+pt: Verdade. Prefere voos diretos ou não se importa com escalas?
+es: Cierto. ¿Prefieres vuelos directos o no te importan las escalas?
+
+speaker: Chloe
+text: Direct if possible. Layovers are a gamble with delays and long waits.
+pt: Direto, se possível. Escalas são uma aposta com atrasos e longas esperas.
+es: Directo si es posible. Las escalas son una apuesta con retrasos y largas esperas.
+
+speaker: Lucas
+text: Agreed, but sometimes I can save a ton going indirect.
+pt: Concordo, mas às vezes economizo muito indiretamente.
+es: De acuerdo, pero a veces ahorro mucho yendo indirecto.
+
+speaker: Chloe
+text: Totally. Seat choice also matters—window or aisle?
+pt: Totalmente. A escolha do assento também importa—janela ou corredor?
+es: Totalmente. La elección de asiento también importa—¿ventana o pasillo?
+
+speaker: Lucas
+text: Window all the way. Views and no seatmate elbow to dodge.
+pt: Janela, sempre. Vista e não preciso desviar do cotovelo do vizinho.
+es: Ventana siempre. Vistas y no esquivar codazos del compañero de asiento.
+
+speaker: Chloe
+text: Ha! I’m aisle person myself—easier to stretch legs.
+pt: Ha! Eu sou do corredor—é mais fácil esticar as pernas.
+es: ¡Ja! Yo soy del pasillo—es más fácil estirar las piernas.
+
+speaker: Lucas
+text: What about baggage? I always overpack and pay extra.
+pt: E a bagagem? Sempre levo coisas demais e pago extra.
+es: ¿Y el equipaje? Siempre empaco de más y pago extra.
+
+speaker: Chloe
+text: Same here. I always check baggage policies thoroughly before booking.
+pt: Idem aqui. Sempre verifico as políticas de bagagem detalhadamente antes de reservar.
+es: Igual aquí. Siempre reviso las políticas de equipaje a fondo antes de reservar.
+
+speaker: Lucas
+text: Smart. Makes the whole trip less stressful.
+pt: Inteligente. Deixa a viagem toda menos estressante.
+es: Inteligente. Hace que todo el viaje sea menos estresante.
+
+speaker: Chloe
+text: Ever tried booking straight from the airline vs aggregators?
+pt: Já tentou reservar direto com a companhia aérea em vez de agregadores?
+es: ¿Has intentado reservar directamente con la aerolínea en lugar de agregadores?
+
+speaker: Lucas
+text: I started booking direct recently—better customer service if things go south.
+pt: Comecei a reservar direto recentemente—melhor atendimento ao cliente se der problema.
+es: Empecé a reservar directo recently—mejor servicio al cliente si las cosas salen mal.
+
+speaker: Chloe
+text: Exactly. Plus some airlines offer cheaper upgrades or perks when booking direct.
+pt: Exatamente. Além disso, algumas companhias oferecem upgrades ou benefícios mais baratos ao reservar direto.
+es: Exactamente. Además algunas aerolíneas ofrecen upgrades o beneficios más baratos al reservar directo.
+
+speaker: Lucas
+text: Good to know. How far in advance do you usually book?
+pt: Bom saber. Com quanto tempo de antecedência você costuma reservar?
+es: Bueno saber. ¿Con cuánta anticipación sueles reservar?
+
+speaker: Chloe
+text: Around two to three months if it’s a big trip. Short trips I wait for last-minute deals.
+pt: Cerca de dois a três meses se for uma viagem grande. Viagens curtas espero por ofertas de última hora.
+es: Alrededor de dos a tres meses si es un viaje grande. Viajes cortos espero ofertas de último minuto.
+
+speaker: Lucas
+text: Smart strategy. Flexibility can save you a chunk of change.
+pt: Estratégia inteligente. Flexibilidade pode te economizar uma grana.
+es: Estrategia inteligente. La flexibilidad puede ahorrarte un buen dinero.
+
+speaker: Chloe
+text: Yep. Travel planning is half the fun, right?
+pt: Sim. Planejar a viagem é metade da diversão, né?
+es: Sí. Planificar el viaje es la mitad de la diversión, ¿verdad?
+
+speaker: Lucas
+text: Couldn’t agree more. Let the countdown begin!
+pt: Não poderia concordar mais. Que comece a contagem regressiva!
+es: No podría estar más de acuerdo. ¡Que comience la cuenta regresiva!
