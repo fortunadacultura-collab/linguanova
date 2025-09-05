@@ -1,0 +1,162 @@
+/* Estilos para os seletores de idioma com ícones */
+.language-icon-selector {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.icon-tooltip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+.icon-tooltip:hover {
+    color: var(--primary);
+}
+
+.icon-tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: var(--dark);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.icon-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--dark) transparent transparent transparent;
+}
+
+.icon-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Novo design do seletor de idiomas */
+.language-selector-wrapper {
+    position: relative;
+    width: 50px;
+}
+
+.language-selector {
+    position: relative;
+    cursor: pointer;
+}
+
+.selected-language {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    transition: all 0.3s ease;
+    min-width: auto;
+    justify-content: center;
+}
+
+.selected-language:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.selected-language img {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.selected-language span {
+    font-weight: 500;
+    flex-grow: 1;
+    font-family: 'Poppins', sans-serif;
+    display: none;
+}
+
+.selected-language i {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+    color: var(--text-light);
+}
+
+.language-selector.active .selected-language i {
+    transform: rotate(180deg);
+}
+
+.language-options {
+    position: absolute;
+    top: 100%;
+    left: -45px;
+    width: 140px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    margin-top: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.language-selector.active .language-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.language-options li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.language-options li:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+.language-options li.selected {
+    background-color: rgba(67, 97, 238, 0.15);
+    font-weight: 600;
+}
+
+.language-options li img {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.language-options li span {
+    display: inline-block;
+}

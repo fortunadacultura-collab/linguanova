@@ -1,0 +1,317 @@
+{
+  "themes": [
+    {
+      "title": "Daily Life",
+      "topics": [
+        { "id": "morning_routine", "name": "Morning Routine" },
+        { "id": "commuting", "name": "Commuting to Work" },
+        { "id": "grocery_shopping", "name": "Grocery Shopping" },
+        { "id": "household_chores", "name": "Household Chores" },
+        { "id": "eating_out", "name": "Eating Out" },
+        { "id": "weekend_plans", "name": "Weekend Plans" },
+        { "id": "weather_chat", "name": "Weather Chat" },
+        { "id": "hanging_out", "name": "Hanging Out with Friends" },
+        { "id": "visiting_family", "name": "Visiting Family" },
+        { "id": "running_errands", "name": "Running Errands" }
+      ]
+    },
+    {
+      "title": "Travel",
+      "topics": [
+        { "id": "booking_flight", "name": "Booking a Flight" },
+        { "id": "airport", "name": "At the Airport" },
+        { "id": "hotel_checkin", "name": "Hotel Check-in" },
+        { "id": "directions", "name": "Asking for Directions" },
+        { "id": "renting_car", "name": "Renting a Car" },
+        { "id": "sightseeing", "name": "Sightseeing" },
+        { "id": "local_food", "name": "Trying Local Food" },
+        { "id": "lost_luggage", "name": "Dealing with Lost Luggage" },
+        { "id": "public_transport", "name": "Using Public Transport" },
+        { "id": "travel_tips", "name": "Travel Tips & Recommendations" }
+      ]
+    },
+    {
+      "title": "Work & Careers",
+      "topics": [
+        { "id": "job_interview", "name": "Job Interview" },
+        { "id": "office_talk", "name": "Office Small Talk" },
+        { "id": "work_meetings", "name": "Work Meetings" },
+        { "id": "asking_raise", "name": "Asking for a Raise" },
+        { "id": "remote_work", "name": "Remote Work Challenges" },
+        { "id": "workplace_conflicts", "name": "Workplace Conflicts" },
+        { "id": "career_goals", "name": "Career Goals" },
+        { "id": "quitting_job", "name": "Quitting a Job" },
+        { "id": "new_job", "name": "Starting a New Job" },
+        { "id": "work_life_balance", "name": "Work-Life Balance" }
+      ]
+    },
+    {
+      "title": "Technology",
+      "topics": [
+        { "id": "new_phone", "name": "Buying a New Phone" },
+        { "id": "tech_issues", "name": "Troubleshooting Tech Issues" },
+        { "id": "social_media", "name": "Social Media Trends" },
+        { "id": "online_security", "name": "Online Security" },
+        { "id": "streaming", "name": "Streaming Movies/Music" },
+        { "id": "video_calls", "name": "Video Calls & Zoom Meetings" },
+        { "id": "gaming", "name": "Gaming Discussions" },
+        { "id": "ai_future", "name": "AI & Future Tech" },
+        { "id": "smart_home", "name": "Smart Home Devices" },
+        { "id": "learning_software", "name": "Learning New Software" }
+      ]
+    },
+    {
+      "title": "Health & Fitness",
+      "topics": [
+        { "id": "gym_workouts", "name": "Gym Workouts" },
+        { "id": "healthy_eating", "name": "Healthy Eating Habits" },
+        { "id": "visiting_doctor", "name": "Visiting a Doctor" },
+        { "id": "mental_health", "name": "Mental Health Awareness" },
+        { "id": "home_workouts", "name": "Home Workouts" },
+        { "id": "weight_loss", "name": "Weight Loss Tips" },
+        { "id": "sleep_relaxation", "name": "Sleep & Relaxation" },
+        { "id": "sports_activities", "name": "Sports & Outdoor Activities" },
+        { "id": "dealing_stress", "name": "Dealing with Stress" },
+        { "id": "medical_emergencies", "name": "Medical Emergencies" }
+      ]
+    },
+    {
+      "title": "Relationships",
+      "topics": [
+        { "id": "first_dates", "name": "First Dates" },
+        { "id": "marriage_proposals", "name": "Marriage Proposals" },
+        { "id": "arguments_apologies", "name": "Arguments & Apologies" },
+        { "id": "long_distance", "name": "Long-Distance Relationships" },
+        { "id": "meeting_parents", "name": "Meeting the Parents" },
+        { "id": "breaking_up", "name": "Breaking Up" },
+        { "id": "friendship_issues", "name": "Friendship Issues" },
+        { "id": "online_dating", "name": "Online Dating" },
+        { "id": "anniversaries", "name": "Anniversaries & Celebrations" },
+        { "id": "trust_jealousy", "name": "Trust & Jealousy" }
+      ]
+    },
+    {
+      "title": "Education",
+      "topics": [
+        { "id": "choosing_major", "name": "Choosing a Major" },
+        { "id": "exam_stress", "name": "Exam Stress" },
+        { "id": "study_tips", "name": "Study Tips" },
+        { "id": "group_projects", "name": "Group Projects" },
+        { "id": "online_learning", "name": "Online Learning" },
+        { "id": "scholarships", "name": "Scholarships & Financial Aid" },
+        { "id": "teacher_student", "name": "Teacher-Student Discussions" },
+        { "id": "school_events", "name": "School Events" },
+        { "id": "learning_language", "name": "Learning a New Language" },
+        { "id": "graduation_plans", "name": "Graduation Plans" }
+      ]
+    },
+    {
+      "title": "Money & Finance",
+      "topics": [
+        { "id": "bank_account", "name": "Opening a Bank Account" },
+        { "id": "saving_money", "name": "Saving Money Tips" },
+        { "id": "investing_stocks", "name": "Investing in Stocks" },
+        { "id": "paying_bills", "name": "Paying Bills" },
+        { "id": "credit_card_debt", "name": "Credit Card Debt" },
+        { "id": "buying_house", "name": "Buying a House" },
+        { "id": "budget_travel", "name": "Budgeting for Travel" },
+        { "id": "retirement_planning", "name": "Retirement Planning" },
+        { "id": "side_hustles", "name": "Side Hustles" },
+        { "id": "tax_discussions", "name": "Tax Discussions" }
+      ]
+    },
+    {
+      "title": "Entertainment",
+      "topics": [
+        { "id": "movie_recommendations", "name": "Movie Recommendations" },
+        { "id": "concert_experiences", "name": "Concert Experiences" },
+        { "id": "book_discussions", "name": "Book Discussions" },
+        { "id": "tv_show_theories", "name": "TV Show Theories" },
+        { "id": "celebrity_gossip", "name": "Celebrity Gossip" },
+        { "id": "theater_plays", "name": "Theater & Plays" },
+        { "id": "podcast_recommendations", "name": "Podcast Recommendations" },
+        { "id": "art_museums", "name": "Art & Museums" },
+        { "id": "comedy_shows", "name": "Comedy Shows" },
+        { "id": "viral_trends", "name": "Viral Internet Trends" }
+      ]
+    },
+    {
+      "title": "Food & Cooking",
+      "topics": [
+        { "id": "cooking_recipe", "name": "Cooking a New Recipe" },
+        { "id": "restaurant_reviews", "name": "Restaurant Reviews" },
+        { "id": "dietary_restrictions", "name": "Dietary Restrictions" },
+        { "id": "baking", "name": "Baking Failures/Successes" },
+        { "id": "fast_food", "name": "Fast Food vs. Home Cooking" },
+        { "id": "food_delivery", "name": "Food Delivery Services" },
+        { "id": "international_cuisine", "name": "International Cuisine" },
+        { "id": "barbecue", "name": "Barbecue & Grilling" },
+        { "id": "coffee_tea", "name": "Coffee & Tea Preferences" },
+        { "id": "food_allergies", "name": "Food Allergies" }
+      ]
+    },
+    {
+      "title": "Business & Entrepreneurship",
+      "topics": [
+        { "id": "startup_ideas", "name": "Startup Ideas" },
+        { "id": "pitching_investors", "name": "Pitching to Investors" },
+        { "id": "business_planning", "name": "Business Planning" },
+        { "id": "digital_marketing", "name": "Digital Marketing" },
+        { "id": "ecommerce_strategies", "name": "E-commerce Strategies" },
+        { "id": "funding_options", "name": "Funding Options" },
+        { "id": "brand_development", "name": "Brand Development" },
+        { "id": "customer_service", "name": "Customer Service" },
+        { "id": "business_networking", "name": "Business Networking" },
+        { "id": "scaling_business", "name": "Scaling a Business" }
+      ]
+    },
+    {
+      "title": "Science & Innovation",
+      "topics": [
+        { "id": "scientific_discoveries", "name": "Scientific Discoveries" },
+        { "id": "research_methods", "name": "Research Methods" },
+        { "id": "climate_science", "name": "Climate Science" },
+        { "id": "space_exploration", "name": "Space Exploration" },
+        { "id": "biotechnology", "name": "Biotechnology" },
+        { "id": "renewable_energy", "name": "Renewable Energy" },
+        { "id": "scientific_ethics", "name": "Scientific Ethics" },
+        { "id": "data_science", "name": "Data Science" },
+        { "id": "innovation_management", "name": "Innovation Management" },
+        { "id": "future_tech", "name": "Future Technologies" }
+      ]
+    }
+  ],
+  
+  "translations": {
+    "pt": {
+      "navHome": "Home",
+      "navDialogues": "Diálogos",
+      "navStories": "Histórias",
+      "navFlashcards": "Flashcards",
+      "navMyDecks": "Meus Decks",
+      "navCommunity": "Comunidade",
+      "navCreateDeck": "Criar Deck",
+      "navStatistics": "Estatísticas",
+      "learningLabel": "Aprendendo:",
+      "userLanguageLabel": "Meu idioma:",
+      "userName": "Usuário",
+      "logoutButton": "Sair",
+      "pageTitle": "Diálogos",
+      "pageTitle_dialogues": "Diálogos",
+      "pageTitle_stories": "Histórias",
+      "pageTitle_flashcards": "Flashcards",
+      "chooseTheme": "Escolha Seu Próximo Tema",
+      "load_more": "Carregar Mais Temas",
+      "show_less": "Mostrar Menos",
+      "startLearning": "Comece a Aprender Agora!",
+      "Play": "Ouvir",
+      "Traduzir": "Traduzir",
+      "Ocultar": "Ocultar",
+      "footerResources": "Recursos",
+      "footerSupport": "Suporte",
+      "footerLegal": "Legal",
+      "footerHelp": "Ajuda",
+      "footerContact": "Contato",
+      "footerPricing": "Preços",
+      "footerTerms": "Termos de Uso",
+      "footerPrivacy": "Privacidade"
+    },
+    "es": {
+      "navHome": "Inicio",
+      "navDialogues": "Diálogos",
+      "navStories": "Historias",
+      "navFlashcards": "Tarjetas",
+      "navMyDecks": "Mis Mazos",
+      "navCommunity": "Comunidad",
+      "navCreateDeck": "Crear Mazo",
+      "navStatistics": "Estadísticas",
+      "learningLabel": "Aprendiendo:",
+      "userLanguageLabel": "Mi idioma:",
+      "userName": "Usuario",
+      "logoutButton": "Salir",
+      "pageTitle": "Diálogos",
+      "pageTitle_dialogues": "Diálogos",
+      "pageTitle_stories": "Historias",
+      "pageTitle_flashcards": "Tarjetas",
+      "chooseTheme": "Elija Su Próximo Tema",
+      "load_more": "Cargar Más Temas",
+      "show_less": "Mostrar Menos",
+      "startLearning": "Empiece a Aprender Ahora!",
+      "Play": "Escuchar",
+      "Traduzir": "Traducir",
+      "Ocultar": "Esconder",
+      "footerResources": "Recursos",
+      "footerSupport": "Soporte",
+      "footerLegal": "Legal",
+      "footerHelp": "Ayuda",
+      "footerContact": "Contacto",
+      "footerPricing": "Precios",
+      "footerTerms": "Términos de Uso",
+      "footerPrivacy": "Privacidad"
+    },
+    "en": {
+      "navHome": "Home",
+      "navDialogues": "Dialogues",
+      "navStories": "Stories",
+      "navFlashcards": "Flashcards",
+      "navMyDecks": "My Decks",
+      "navCommunity": "Community",
+      "navCreateDeck": "Create Deck",
+      "navStatistics": "Statistics",
+      "learningLabel": "Learning:",
+      "userLanguageLabel": "My language:",
+      "userName": "User",
+      "logoutButton": "Logout",
+      "pageTitle": "Dialogues",
+      "pageTitle_dialogues": "Dialogues",
+      "pageTitle_stories": "Stories",
+      "pageTitle_flashcards": "Flashcards",
+      "chooseTheme": "Choose Your Next Theme",
+      "load_more": "Load More Themes",
+      "show_less": "Show Less",
+      "startLearning": "Start Learning Now!",
+      "Play": "Play",
+      "Traduzir": "Translate",
+      "Ocultar": "Hide",
+      "footerResources": "Resources",
+      "footerSupport": "Support",
+      "footerLegal": "Legal",
+      "footerHelp": "Help",
+      "footerContact": "Contact",
+      "footerPricing": "Pricing",
+      "footerTerms": "Terms of Use",
+      "footerPrivacy": "Privacy"
+    }
+  },
+  
+  "settings": {
+    "dialogueTemplates": {
+      "txtFormat": {
+        "titlePrefix": "title:",
+        "speakerPrefix": "speaker:",
+        "textPrefix": "text:",
+        "translationPrefixes": {
+          "pt": "pt:",
+          "es": "es:",
+          "en": "en:"
+        }
+      }
+    },
+    "paths": {
+      "dialogues": "languages/en/dialogues/",
+      "audios": "audios/"
+    },
+    "defaults": {
+      "language": "pt",
+      "dialogue": "morning_routine",
+      "level": "INTERMEDIÁRIO (B1-B2)"
+    },
+    "audioSettings": {
+      "fallbackDuration": {
+        "baseSeconds": 2,
+        "secondsPerWord": 0.6
+      },
+      "preload": "none"
+    }
+  }
+}
