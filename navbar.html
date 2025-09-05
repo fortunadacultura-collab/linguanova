@@ -1,0 +1,192 @@
+<nav class="navbar">
+    <div class="logo">
+        <i class="fas fa-language"></i>
+        <span class="logo-text">Lingua Nova</span>
+    </div>
+    
+    <div class="nav-links" id="nav-links">
+        <a href="index.html" data-translate="navHome">Home</a>
+        <a href="dialogues.html" data-translate="navDialogues">Diálogos</a>
+        <a href="stories.html" data-translate="navStories">Histórias</a>
+        
+        <!-- Dropdown para Flashcards -->
+        <div class="dropdown">
+            <div class="dropdown-toggle">
+                <span data-translate="navFlashcards">Flashcards</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu">
+                <a href="my-decks.html" class="dropdown-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span data-translate="navMyDecks">Meus Decks</span>
+                </a>
+                <a href="community.html" class="dropdown-item">
+                    <i class="fas fa-users"></i>
+                    <span data-translate="navCommunity">Comunidade</span>
+                </a>
+                <a href="create-deck.html" class="dropdown-item">
+                    <i class="fas fa-plus"></i>
+                    <span data-translate="navCreateDeck">Criar Deck</span>
+                </a>
+                <a href="statistics.html" class="dropdown-item">
+                    <i class="fas fa-history"></i>
+                    <span data-translate="navStatistics">Estatísticas</span>
+                </a>
+            </div>
+        </div>
+        
+        <a href="community.html" data-translate="navCommunity">Comunidade</a>
+    </div>
+    
+    <div class="nav-actions">
+        <!-- Combo Aprendendo (agora com ícone) -->
+        <div class="language-icon-selector">
+            <div class="icon-tooltip">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="tooltip-text" data-translate="learningLabel">Aprendendo</span>
+            </div>
+            <div class="language-selector-wrapper">
+                <div class="language-selector">
+                    <div class="selected-language" id="learning-language">
+                        <img src="assets/images/flags/us.svg" alt="English">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="language-options" id="learning-language-options">
+                        <li data-value="pt" data-flag="br">
+                            <img src="assets/images/flags/br.svg" alt="Português">
+                            <span>Português</span>
+                        </li>
+                        <li data-value="es" data-flag="es">
+                            <img src="assets/images/flags/es.svg" alt="Español">
+                            <span>Español</span>
+                        </li>
+                        <li data-value="fr" data-flag="fr">
+                            <img src="assets/images/flags/fr.svg" alt="Français">
+                            <span>Français</span>
+                        </li>
+                        <li data-value="de" data-flag="de">
+                            <img src="assets/images/flags/de.svg" alt="Deutsch">
+                            <span>Deutsch</span>
+                        </li>
+                        <li data-value="it" data-flag="it">
+                            <img src="assets/images/flags/it.svg" alt="Italiano">
+                            <span>Italiano</span>
+                        </li>
+                        <li data-value="ru" data-flag="ru">
+                            <img src="assets/images/flags/ru.svg" alt="Русский">
+                            <span>Русский</span>
+                        </li>
+                        <li data-value="ja" data-flag="jp">
+                            <img src="assets/images/flags/jp.svg" alt="日本語">
+                            <span>日本語</span>
+                        </li>
+                        <li data-value="ko" data-flag="kr">
+                            <img src="assets/images/flags/kr.svg" alt="한국어">
+                            <span>한국어</span>
+                        </li>
+                        <li data-value="zh" data-flag="cn">
+                            <img src="assets/images/flags/cn.svg" alt="中文">
+                            <span>中文</span>
+                        </li>
+                        <li data-value="hi" data-flag="in">
+                            <img src="assets/images/flags/in.svg" alt="हिन्दी">
+                            <span>हिन्दी</span>
+                        </li>
+                        <li data-value="en" data-flag="us" class="selected">
+                            <img src="assets/images/flags/us.svg" alt="English">
+                            <span>English</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Combo Meu Idioma (agora com ícone) -->
+        <div class="language-icon-selector">
+            <div class="icon-tooltip">
+                <i class="fas fa-globe"></i>
+                <span class="tooltip-text" data-translate="userLanguageLabel">Meu idioma</span>
+            </div>
+            <div class="language-selector-wrapper">
+                <div class="language-selector">
+                    <div class="selected-language" id="user-language">
+                        <img src="assets/images/flags/br.svg" alt="Português">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="language-options" id="user-language-options">
+                        <li data-value="pt" data-flag="br" class="selected">
+                            <img src="assets/images/flags/br.svg" alt="Português">
+                            <span>PT</span>
+                        </li>
+                        <li data-value="es" data-flag="es">
+                            <img src="assets/images/flags/es.svg" alt="Español">
+                            <span>ES</span>
+                        </li>
+                        <li data-value="fr" data-flag="fr">
+                            <img src="assets/images/flags/fr.svg" alt="Français">
+                            <span>FR</span>
+                        </li>
+                        <li data-value="de" data-flag="de">
+                            <img src="assets/images/flags/de.svg" alt="Deutsch">
+                            <span>DE</span>
+                        </li>
+                        <li data-value="it" data-flag="it">
+                            <img src="assets/images/flags/it.svg" alt="Italiano">
+                            <span>IT</span>
+                        </li>
+                        <li data-value="ru" data-flag="ru">
+                            <img src="assets/images/flags/ru.svg" alt="Русский">
+                            <span>RU</span>
+                        </li>
+                        <li data-value="ja" data-flag="jp">
+                            <img src="assets/images/flags/jp.svg" alt="日本語">
+                            <span>JP</span>
+                        </li>
+                        <li data-value="ko" data-flag="kr">
+                            <img src="assets/images/flags/kr.svg" alt="한국어">
+                            <span>KO</span>
+                        </li>
+                        <li data-value="zh" data-flag="cn">
+                            <img src="assets/images/flags/cn.svg" alt="中文">
+                            <span>ZH</span>
+                        </li>
+                        <li data-value="hi" data-flag="in">
+                            <img src="assets/images/flags/in.svg" alt="हिन्दी">
+                            <span>HI</span>
+                        </li>
+                        <li data-value="en" data-flag="us">
+                            <img src="assets/images/flags/us.svg" alt="English">
+                            <span>EN</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usuário com menu dropdown (agora inclui o botão Sair) -->
+        <div class="user-menu">
+            <div class="user-avatar">U</div>
+            <div class="user-dropdown-menu">
+                <div class="user-dropdown-item" onclick="viewProfile()">
+                    <i class="fas fa-user"></i>
+                    <span data-translate="userProfile">Meu Perfil</span>
+                </div>
+                <div class="user-dropdown-item" onclick="openSettings()">
+                    <i class="fas fa-cog"></i>
+                    <span data-translate="userSettings">Configurações</span>
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <div class="user-dropdown-item logout-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span data-translate="logoutButton">Sair</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</nav>

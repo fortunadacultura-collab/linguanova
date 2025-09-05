@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Dialogues | Lingua Nova</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/language-selector.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navbar (será carregada via JavaScript) -->
+    <div id="navbar-container"></div>
+
+    <div class="content-below-navbar">
+        <!-- Page title added here -->
+        <div class="page-title-container">
+            <h1 class="page-title" data-translate="pageTitle">Dialogues</h1>
+        </div>
+        
+        <div class="container">
+            <div class="dialogue-container">
+                <h2 class="dialogue-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span id="dialogue-title-text">Booking a Flight</span>
+                </h2>
+                
+                <div id="dialogue-content">
+                    <!-- Mensagens serão inseridas pelo JavaScript -->
+                </div>
+
+                <div class="media-player">
+                    <div class="player-controls">
+                        <button class="player-btn" id="play-btn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="player-btn" id="pause-btn">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="player-btn" id="stop-btn">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button class="player-btn" id="translate-toggle-btn">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <div class="volume-control">
+                            <button class="volume-btn" id="volume-btn">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                        <div class="time-display">
+                            <span id="current-time">0:00</span> <span id="total-time">0:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title" id="choose-theme-text" data-translate="chooseTheme">Escolha Seu Próximo Tema:</h2>
+            
+            <div class="theme-grid" id="theme-container">
+                <!-- Theme cards will be inserted by JavaScript -->
+            </div>
+
+            <div class="theme-controls">
+                <button id="load-more-btn" class="theme-control-btn">
+                    <i class="fas fa-chevron-down"></i>
+                    <span data-translate="loadMore">Carregar Mais Temas</span>
+                </button>
+                <button id="show-less-btn" class="theme-control-btn" style="display: none;">
+                    <i class="fas fa-chevron-up"></i>
+                    <span data-translate="showLess">Mostrar Menos</span>
+                </button>
+            </div>
+
+            <div class="text-center">
+                <a href="signup.html" class="cta-button" id="start-learning-text" data-translate="startLearning">Comece a Aprender Agora!</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (será carregado via JavaScript) -->
+    <div id="footer-container"></div>
+
+    <script>
+    // Initialize the application after everything is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set a small timeout to ensure all elements are rendered
+        setTimeout(function() {
+            if (typeof init === 'function') {
+                init().catch(function(error) {
+                    console.error('Failed to initialize app:', error);
+                });
+            }
+        }, 100);
+    });
+    </script>
+    <script src="js/navbar.js"></script>
+    <script src="js/language-manager.js"></script>
+    <script src="js/native-language.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
