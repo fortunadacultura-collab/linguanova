@@ -111,9 +111,14 @@
     }
 }
 
+/* ============================================
+   OTIMIZAÇÕES ESPECÍFICAS PARA MOBILE
+   ============================================ */
+
 @media (max-width: 768px) {
     .content-below-navbar {
         padding-top: 70px;
+        padding-bottom: 1rem;
     }
     
     .nav-actions {
@@ -124,68 +129,315 @@
         margin-right: 0.3rem;
     }
     
-    /* Ajustes para o player de mídia em mobile */
+    /* Page Title Otimizado */
+    .page-title-container {
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        padding: 0 1rem;
+    }
+    
+    .page-title::after {
+        width: 60px;
+    }
+    
+    /* Dialogue Container Maximizado */
+    .dialogue-container {
+        margin: 1rem 0.5rem !important;
+        border-radius: 12px;
+    }
+    
+    #dialogue-content {
+        padding: 1rem !important;
+        height: 55vh;
+        max-height: 400px;
+    }
+    
+    /* Bolhas de Diálogo Otimizadas */
+    .message {
+        max-width: 92% !important;
+        padding: 14px 16px !important;
+        margin: 0 auto 12px auto;
+    }
+    
+    .message-user {
+        margin-left: auto;
+        margin-right: 0;
+    }
+    
+    .message-other {
+        margin-left: 0;
+        margin-right: auto;
+    }
+    
+    .message-text {
+        font-size: 1rem !important;
+        line-height: 1.5;
+    }
+    
+    .message-sender {
+        font-size: 1rem !important;
+        margin-bottom: 4px;
+    }
+    
+    .translation-text {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+    
+    /* Media Player Otimizado - LINHA ÚNICA */
+    .media-player {
+        padding: 1rem;
+        margin: 1rem 0.5rem;
+    }
+    
     .player-controls {
-        gap: 12px;
+        flex-direction: row !important;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1rem;
     }
     
     .player-btn {
-        width: 48px;
-        height: 48px;
+        width: 50px !important;
+        height: 50px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
+        padding: 14px !important;
+        flex-shrink: 0;
     }
     
+    .player-btn i {
+        font-size: 1.2rem !important;
+    }
+    
+    /* Volume Control Compacto e Expansível */
     .volume-control {
-        margin-top: 10px;
-        width: 100%;
-        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        margin-top: 0 !important;
+        position: relative;
     }
     
     #volume-slider {
-        width: 100px;
+        width: 60px;
+        display: none;
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+    }
+    
+    .volume-control.active #volume-slider {
+        display: block;
+    }
+    
+    .volume-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Progress Bar Otimizada */
+    .progress-container {
+        margin-top: 1rem;
+    }
+    
+    .progress-bar {
+        height: 6px;
+        margin-bottom: 12px;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .progress-bar::before {
+        height: 12px;
+        top: -3px;
+    }
+    
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 0;
+        right: 0;
+        bottom: -8px;
+        z-index: 1;
+    }
+    
+    .time-display {
+        font-size: 0.8rem;
+    }
+    
+    /* Section Title Otimizado */
+    .section-title {
+        margin: 2rem 0 1.5rem;
+        font-size: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .section-title::after {
+        width: 80px;
+    }
+    
+    /* Theme Grid Otimizado */
+    .theme-grid {
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .theme-card {
+        padding: 1.2rem;
+        margin: 0 0.5rem;
+    }
+    
+    .theme-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .theme-card li {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Theme Controls */
+    .theme-controls {
+        margin: 2rem 0;
+    }
+    
+    .theme-control-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    /* CTA Button */
+    .cta-button {
+        padding: 0.9rem 1.8rem;
+        font-size: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Feedback Tátil Melhorado */
+    .player-btn:active {
+        transform: scale(0.92);
+        transition: transform 0.1s ease;
+    }
+    
+    .message:active {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        transition: background-color 0.1s ease;
     }
 }
 
-@media (max-width: 576px) {
-    .page-title {
-        font-size: 1.5rem;
-    }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .player-controls {
-        flex-direction: column;
-        gap: 10px;
+/* ============================================
+   OTIMIZAÇÕES PARA TELAS MUITO PEQUENAS
+   ============================================ */
+
+@media (max-width: 360px) {
+    .navbar {
+        padding: 0.7rem 0.8rem;
     }
     
     .player-btn {
-        width: 52px;
-        height: 52px;
+        width: 45px !important;
+        height: 45px !important;
+        min-width: 45px !important;
+        min-height: 45px !important;
+        padding: 12px !important;
+    }
+    
+    .player-btn i {
+        font-size: 1.1rem !important;
+    }
+    
+    .volume-btn {
+        width: 38px;
+        height: 38px;
+    }
+    
+    #volume-slider {
+        width: 50px;
+        bottom: -32px;
+    }
+    
+    .message {
+        max-width: 94% !important;
+        padding: 12px 14px !important;
+    }
+    
+    .message-text {
+        font-size: 0.95rem !important;
+    }
+    
+    .theme-card {
+        padding: 1rem;
+        margin: 0 0.3rem;
+    }
+    
+    .theme-card li {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.85rem;
     }
 }
 
-@media (max-width: 400px) {
-    .nav-actions {
-        gap: 0.3rem;
+/* ============================================
+   OTIMIZAÇÕES PARA LANDSCAPE MOBILE
+   ============================================ */
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .content-below-navbar {
+        padding-top: 65px;
     }
     
-    .language-selector-wrapper {
-        width: 40px;
+    #dialogue-content {
+        height: 45vh;
+        max-height: 300px;
     }
     
-    .selected-language {
-        padding: 0.3rem 0.4rem;
+    .message {
+        max-width: 85% !important;
+        padding: 12px 14px !important;
     }
     
-    .user-avatar {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
+    .media-player {
+        padding: 0.8rem;
+        margin: 0.8rem 0.5rem;
+    }
+    
+    .player-controls {
+        gap: 6px;
+    }
+    
+    .player-btn {
+        width: 45px !important;
+        height: 45px !important;
+        min-width: 45px !important;
+        min-height: 45px !important;
+        padding: 12px !important;
+    }
+    
+    .player-btn i {
+        font-size: 1.1rem !important;
     }
 }
 
-/* Ajustes específicos para iOS (iPhone) */
+/* ============================================
+   AJUSTES ESPECÍFICOS PARA iOS
+   ============================================ */
+
 @supports (-webkit-touch-callout: none) {
     .player-btn {
         -webkit-tap-highlight-color: transparent;
@@ -198,9 +450,22 @@
         width: 20px;
         height: 20px;
     }
+    
+    /* Prevenir zoom em inputs */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Melhorar scrolling */
+    .dialogue-container {
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
-/* Ajustes específicos para Android */
+/* ============================================
+   AJUSTES ESPECÍFICOS PARA ANDROID
+   ============================================ */
+
 @media (-webkit-device-pixel-ratio: 2) and (max-width: 768px) {
     .player-btn i, .player-btn svg {
         width: 22px;
@@ -210,5 +475,55 @@
     .player-btn {
         min-height: 52px;
         min-width: 56px;
+    }
+    
+    /* Melhorar renderização de fontes */
+    body {
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+}
+
+/* ============================================
+   PREVENIR FLICKER EM ANIMAÇÕES
+   ============================================ */
+
+@media (max-width: 768px) {
+    .message {
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+    }
+    
+    .player-btn {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+
+/* ============================================
+   MELHORAR VISIBILIDADE EM MODE CLARO/ESCURO
+   ============================================ */
+
+@media (max-width: 768px) {
+    .dialogue-container {
+        background: var(--chat-bg);
+    }
+    
+    .media-player {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .media-player {
+            background: rgba(30, 30, 40, 0.95);
+        }
+        
+        #volume-slider {
+            background: #2a2a3a;
+        }
     }
 }
