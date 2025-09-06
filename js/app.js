@@ -21,6 +21,258 @@ let appConfig = {
     lastVolume: 0.7
 };
 
+// 🔥 NOVO: Gerenciador de Volume para Mobile
+const volumeManager = {
+    isActive: false,
+    currentVolume: 1,
+    isMuted: false,
+    lastVolume: 0.7,
+    
+    init() {
+        this.setupVolumeElements();
+        this.loadVolumePreference();
+        this.setupEventListeners();
+        this.updateVolumeIcon();
+    },
+    
+    setupVolumeElements() {
+        // Criar elementos do volume se não existirem
+        if (!document.getElementById('volume-popup')) {
+            this.createVolumePopup();
+        }
+    },
+    
+    createVolumePopup() {
+        const volumePopup = document.createElement('div');
+        volumePopup.id = 'volume-popup';
+        volumePopup.className = 'volume-popup';
+        volumePopup.innerHTML = `
+            <div class="volume-popup-content">
+                <div class="volume-header">
+                    <span data-translate="volumeTitle">Volume</span>
+                    <button class="volume-close-btn">&times;</button>
+                </div>
+                <div class="volume-slider-container">
+                    <input type="range" id="mobile-volume-slider" 
+                           min="0" max="1" step="0.1" value="${this.currentVolume}"
+                           class="mobile-volume-slider">
+                    <div class="volume-labels">
+                        <span>0%</span>
+                        <span>50%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+                <div class="volume-buttons">
+                    <button class="volume-preset-btn" data-value="0.3">30%</button>
+                    <button class="volume-preset-btn" data-value="0.6">60%</button>
+                    <button class="volume-preset-btn" data-value="1">100%</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(volumePopup);
+    },
+    
+    loadVolumePreference() {
+        const savedVolume = localStorage.getItem('appVolume');
+        if (savedVolume !== null) {
+            this.currentVolume = parseFloat(savedVolume);
+            this.updateVolume(this.currentVolume, false);
+        }
+    },
+    
+    setupEventListeners() {
+        const volumeBtn = document.getElementById('volume-btn');
+        const volumeCloseBtn = document.querySelector('.volume-close-btn');
+        const volumePopup = document.getElementById('volume-popup');
+        
+        // Botão de volume
+        if (volumeBtn) {
+            volumeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleVolumePopup();
+            });
+            
+            // Gestos touch para volume
+            this.setupTouchGestures(volumeBtn);
+        }
+        
+        // Slider de volume
+        const volumeSlider = document.getElementById('mobile-volume-slider');
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                const volume = parseFloat(e.target.value);
+                this.updateVolume(volume, true);
+            });
+            
+            volumeSlider.addEventListener('change', (e) => {
+                const volume = parseFloat(e.target.value);
+                this.saveVolumePreference(volume);
+            });
+        }
+        
+        // Botão fechar
+        if (volumeCloseBtn) {
+            volumeCloseBtn.addEventListener('click', () => {
+                this.hideVolumePopup();
+            });
+        }
+        
+        // Botões de preset
+        document.querySelectorAll('.volume-preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const volume = parseFloat(e.target.getAttribute('data-value'));
+                this.updateVolume(volume, true);
+                this.saveVolumePreference(volume);
+                this.hideVolumePopup();
+            });
+        });
+        
+        // Fechar ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (volumePopup && volumePopup.classList.contains('active') && 
+                !e.target.closest('.volume-popup') && 
+                !e.target.closest('#volume-btn')) {
+                this.hideVolumePopup();
+            }
+        });
+    },
+    
+    setupTouchGestures(volumeBtn) {
+        if (window.innerWidth <= 768) {
+            let startY = 0;
+            let startVolume = 0;
+            
+            volumeBtn.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                startVolume = this.currentVolume;
+                e.preventDefault();
+            });
+            
+            volumeBtn.addEventListener('touchmove', (e) => {
+                const currentY = e.touches[0].clientY;
+                const deltaY = startY - currentY;
+                const volumeChange = deltaY / 200;
+                
+                let newVolume = Math.max(0, Math.min(1, startVolume + volumeChange));
+                this.updateVolume(newVolume, false);
+                this.showVolumeFeedback(newVolume);
+                e.preventDefault();
+            });
+            
+            volumeBtn.addEventListener('touchend', () => {
+                this.saveVolumePreference(this.currentVolume);
+                this.hideVolumeFeedback();
+            });
+        }
+    },
+    
+    toggleVolumePopup() {
+        const volumePopup = document.getElementById('volume-popup');
+        if (volumePopup) {
+            volumePopup.classList.toggle('active');
+            this.isActive = volumePopup.classList.contains('active');
+            
+            if (this.isActive) {
+                const slider = document.getElementById('mobile-volume-slider');
+                if (slider) {
+                    slider.value = this.currentVolume;
+                }
+            }
+        }
+    },
+    
+    hideVolumePopup() {
+        const volumePopup = document.getElementById('volume-popup');
+        if (volumePopup) {
+            volumePopup.classList.remove('active');
+            this.isActive = false;
+        }
+    },
+    
+    updateVolume(volume, updateSlider = true) {
+        this.currentVolume = volume;
+        
+        // Atualizar áudios
+        appConfig.audioElements.forEach(audio => {
+            if (audio) {
+                audio.volume = this.currentVolume;
+            }
+        });
+        
+        // Atualizar appConfig para consistência
+        appConfig.volume = this.currentVolume;
+        
+        // Atualizar UI
+        this.updateVolumeIcon();
+        
+        // Atualizar slider se necessário
+        if (updateSlider) {
+            const slider = document.getElementById('mobile-volume-slider');
+            if (slider) {
+                slider.value = this.currentVolume;
+            }
+        }
+    },
+    
+    updateVolumeIcon() {
+        const volumeBtn = document.getElementById('volume-btn');
+        if (volumeBtn) {
+            if (this.currentVolume === 0) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (this.currentVolume < 0.3) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-off"></i>';
+            } else if (this.currentVolume < 0.6) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
+    },
+    
+    saveVolumePreference(volume) {
+        localStorage.setItem('appVolume', volume.toString());
+    },
+    
+    showVolumeFeedback(volume) {
+        let feedback = document.getElementById('volume-feedback');
+        if (!feedback) {
+            feedback = document.createElement('div');
+            feedback.id = 'volume-feedback';
+            feedback.className = 'volume-feedback';
+            document.body.appendChild(feedback);
+        }
+        
+        const volumePercent = Math.round(volume * 100);
+        feedback.innerHTML = `
+            <i class="fas fa-volume-${volume === 0 ? 'mute' : volume < 0.3 ? 'off' : volume < 0.6 ? 'down' : 'up'}"></i>
+            <span>${volumePercent}%</span>
+        `;
+        feedback.classList.add('visible');
+    },
+    
+    hideVolumeFeedback() {
+        const feedback = document.getElementById('volume-feedback');
+        if (feedback) {
+            feedback.classList.remove('visible');
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.parentNode.removeChild(feedback);
+                }
+            }, 300);
+        }
+    },
+    
+    toggleMute() {
+        if (this.currentVolume > 0) {
+            this.lastVolume = this.currentVolume;
+            this.updateVolume(0, true);
+        } else {
+            this.updateVolume(this.lastVolume || 0.7, true);
+        }
+        this.saveVolumePreference(this.currentVolume);
+    }
+};
+
 // Gerenciador de idioma de tradução
 const translationManager = {
     currentLanguage: 'pt',
@@ -91,7 +343,8 @@ async function init() {
         renderThemeCards();
         setupEventListeners();
         
-        // 🔥 ADICIONADO: Otimizações mobile
+        // 🔥 ATUALIZADO: Inicializar volume manager primeiro
+        volumeManager.init();
         setupMobileOptimizations();
         optimizeForMobile();
         
@@ -297,7 +550,7 @@ function getFallbackTranslation(lang) {
     return fallbacks[lang] || 'Translation not available';
 }
 
-// 🔥 CORREÇÃO: Audio functions com caminhos consistentes
+// Audio functions - SEM FALLBACK
 function preloadAudios(dialogueId) {
     // Clear existing audio elements
     appConfig.audioElements.forEach(audio => {
@@ -315,8 +568,7 @@ function preloadAudios(dialogueId) {
         const audio = new Audio();
         audio.preload = 'auto';
         
-        // 🔥 CORREÇÃO: Caminho consistente baseado na estrutura do projeto
-        // Baseado na estrutura: languages/en/dialogues/{dialogueId}/audios/line_{index}.mp3
+        // CORREÇÃO: Caminho consistente baseado na estrutura do projeto
         audio.src = `languages/en/dialogues/${dialogueId}/audios/line_${index}.mp3`;
         audio.volume = appConfig.volume;
         
@@ -324,7 +576,7 @@ function preloadAudios(dialogueId) {
             console.error(`Error loading audio for line ${index}:`, e);
             console.error(`Audio path: ${audio.src}`);
             
-            // 🔥 CORREÇÃO: Tentar caminho alternativo se o principal falhar
+            // CORREÇÃO: Tentar caminho alternativo se o principal falhar
             const alternativePath = `audios/${dialogueId}/line_${index}.mp3`;
             console.log(`Trying alternative path: ${alternativePath}`);
             audio.src = alternativePath;
@@ -390,7 +642,7 @@ function playDialogue() {
     startProgressTracking();
     
     // 🔥 ADICIONADO: Fechar volume control se aberto
-    closeVolumeControl();
+    volumeManager.hideVolumePopup();
     
     // Resume from pause if we have a current audio
     if (appConfig.currentAudio && !appConfig.currentAudio.paused) {
@@ -506,7 +758,7 @@ function stopAllAudio() {
     updatePlayerControls();
     
     // 🔥 ADICIONADO: Fechar volume control ao parar
-    closeVolumeControl();
+    volumeManager.hideVolumePopup();
 }
 
 function playPhrase(index) {
@@ -531,7 +783,7 @@ function playPhrase(index) {
     updatePlayerControls();
     
     // 🔥 ADICIONADO: Fechar volume control ao tocar frase
-    closeVolumeControl();
+    volumeManager.hideVolumePopup();
     
     if (!audio || !audio.src) {
         showError('Audio not available for this phrase');
@@ -691,6 +943,7 @@ function updateTranslationVisibility() {
     }
 }
 
+// 🔥 ATUALIZADO: Função updateVolume unificada
 function updateVolume(volume) {
     appConfig.volume = volume;
     
@@ -700,43 +953,52 @@ function updateVolume(volume) {
         }
     });
     
-    if (domElements.volumeBtn) {
-        if (appConfig.volume === 0) {
-            domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-        } else if (appConfig.volume < 0.5) {
-            domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
-        } else {
-            domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    // Atualizar ambos os sistemas de volume
+    if (window.innerWidth <= 768) {
+        volumeManager.updateVolume(volume, false);
+    } else {
+        if (domElements.volumeBtn) {
+            if (appConfig.volume === 0) {
+                domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (appConfig.volume < 0.5) {
+                domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                domElements.volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
         }
+    }
+    
+    // Atualizar slider visualmente
+    if (domElements.volumeSlider) {
+        domElements.volumeSlider.value = appConfig.volume;
     }
 }
 
+// 🔥 ATUALIZADO: Função toggleMute unificada
 function toggleMute() {
-    console.log("Volume button clicked");
-    
-    if (appConfig.volume > 0) {
-        appConfig.lastVolume = appConfig.volume;
-        updateVolume(0);
-        if (domElements.volumeSlider) {
-            domElements.volumeSlider.value = 0;
-        }
+    if (window.innerWidth <= 768) {
+        volumeManager.toggleMute();
     } else {
-        updateVolume(appConfig.lastVolume || 0.7);
-        if (domElements.volumeSlider) {
-            domElements.volumeSlider.value = appConfig.lastVolume || 0.7;
+        // Comportamento original para desktop
+        if (appConfig.volume > 0) {
+            appConfig.lastVolume = appConfig.volume;
+            updateVolume(0);
+            if (domElements.volumeSlider) {
+                domElements.volumeSlider.value = 0;
+            }
+        } else {
+            updateVolume(appConfig.lastVolume || 0.7);
+            if (domElements.volumeSlider) {
+                domElements.volumeSlider.value = appConfig.lastVolume || 0.7;
+            }
         }
     }
-    
-    // 🔥 ADICIONADO: Fechar volume control após ajuste
-    setTimeout(closeVolumeControl, 1000);
 }
 
 // 🔥 NOVA FUNÇÃO: Fechar controle de volume
 function closeVolumeControl() {
     if (window.innerWidth <= 768) {
-        document.querySelectorAll('.volume-control').forEach(control => {
-            control.classList.remove('active');
-        });
+        volumeManager.hideVolumePopup();
     }
 }
 
@@ -872,7 +1134,13 @@ function setupEventListeners() {
     }
     
     if (domElements.volumeBtn) {
-        domElements.volumeBtn.addEventListener('click', toggleMute);
+        // 🔥 ATUALIZADO: Usar o volume manager para mobile
+        if (window.innerWidth <= 768) {
+            // O volume manager já cuida dos event listeners
+        } else {
+            domElements.volumeBtn.addEventListener('click', toggleMute);
+        }
+        
         domElements.volumeBtn.addEventListener('touchstart', function() {
             this.style.transform = 'scale(0.92)';
         });
@@ -994,42 +1262,10 @@ function handleResize() {
 
 // 🔥 NOVAS FUNÇÕES: Otimizações Mobile
 function setupMobileOptimizations() {
-    // Toggle do controle de volume em mobile
-    const volumeBtn = document.getElementById('volume-btn');
+    // Configurações existentes do volume control
     const volumeControl = document.querySelector('.volume-control');
-    
-    if (volumeBtn && volumeControl) {
-        volumeBtn.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768) {
-                e.stopPropagation();
-                volumeControl.classList.toggle('active');
-                
-                // Fecha outros controles se abertos
-                document.querySelectorAll('.volume-control').forEach(control => {
-                    if (control !== volumeControl && control.classList.contains('active')) {
-                        control.classList.remove('active');
-                    }
-                });
-            }
-        });
-        
-        // Fecha o volume ao clicar fora
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768 && 
-                !e.target.closest('.volume-control') && 
-                volumeControl.classList.contains('active')) {
-                volumeControl.classList.remove('active');
-            }
-        });
-        
-        // Fecha ao tocar fora em touch devices
-        document.addEventListener('touchstart', function(e) {
-            if (window.innerWidth <= 768 && 
-                !e.target.closest('.volume-control') && 
-                volumeControl.classList.contains('active')) {
-                volumeControl.classList.remove('active');
-            }
-        });
+    if (volumeControl && window.innerWidth <= 768) {
+        volumeControl.style.display = 'none'; // Esconder controle desktop
     }
 }
 
@@ -1041,7 +1277,7 @@ function optimizeForMobile() {
         const originalStop = stopAllAudio;
         stopAllAudio = function() {
             originalStop.apply(this, arguments);
-            closeVolumeControl();
+            volumeManager.hideVolumePopup();
         };
 
         // Scroll suave melhorado para mobile
