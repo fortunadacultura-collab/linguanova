@@ -1,5 +1,7 @@
 // Navbar functionality
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Loading navbar...');
+    
     // Load navbar and footer
     loadNavbar();
     loadFooter();
@@ -80,11 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // CORREÇÃO: Nova lógica para os seletores de idioma
 function setupLanguageSelectors() {
     // Seletor de idioma de aprendizado
-    const learningSelector = document.querySelector('#learning-language').closest('.language-selector');
+    const learningSelector = document.querySelector('#learning-language')?.closest('.language-selector');
     const learningSelected = document.getElementById('learning-language');
     const learningOptions = document.getElementById('learning-language-options');
     
-    if (learningSelected && learningOptions) {
+    if (learningSelected && learningOptions && learningSelector) {
         learningSelected.addEventListener('click', function(e) {
             e.stopPropagation();
             learningSelector.classList.toggle('active');
@@ -98,11 +100,11 @@ function setupLanguageSelectors() {
     }
     
     // Seletor de idioma nativo
-    const userSelector = document.querySelector('#user-language').closest('.language-selector');
+    const userSelector = document.querySelector('#user-language')?.closest('.language-selector');
     const userSelected = document.getElementById('user-language');
     const userOptions = document.getElementById('user-language-options');
     
-    if (userSelected && userOptions) {
+    if (userSelected && userOptions && userSelector) {
         userSelected.addEventListener('click', function(e) {
             e.stopPropagation();
             userSelector.classList.toggle('active');
@@ -117,6 +119,8 @@ function setupLanguageSelectors() {
 }
 
 function setupLanguageOptions(optionsContainer, type) {
+    if (!optionsContainer) return;
+    
     optionsContainer.querySelectorAll('li').forEach(option => {
         option.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -126,8 +130,8 @@ function setupLanguageOptions(optionsContainer, type) {
             if (type === 'learning') {
                 // Atualizar visualmente
                 const selectedElement = document.getElementById('learning-language');
-                const flagImg = selectedElement.querySelector('img');
-                if (flagImg) {
+                const flagImg = selectedElement?.querySelector('img');
+                if (flagImg && selectedElement) {
                     flagImg.src = `assets/images/flags/${flag}.svg`;
                     flagImg.alt = value;
                 }
@@ -139,14 +143,20 @@ function setupLanguageOptions(optionsContainer, type) {
                 this.classList.add('selected');
                 
                 // Fechar menu e redirecionar
-                this.closest('.language-selector').classList.remove('active');
+                const selector = this.closest('.language-selector');
+                if (selector) {
+                    selector.classList.remove('active');
+                }
                 window.location.href = `study-${value}.html`;
             } else if (type === 'native') {
                 // NOTIFICAR a mudança de idioma de tradução
                 notifyNativeLanguageChange(value);
                 
                 // Fechar menu
-                this.closest('.language-selector').classList.remove('active');
+                const selector = this.closest('.language-selector');
+                if (selector) {
+                    selector.classList.remove('active');
+                }
             }
         });
     });
@@ -184,55 +194,80 @@ function closeUserMenuOnClickOutside(event) {
 // Load navbar from external file
 function loadNavbar() {
     fetch('navbar.html')
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(data => {
-            document.getElementById('navbar-container').innerHTML = data;
-            
-            // ⚠️ AGUARDAR O NATIVE-LANGUAGE CARREGAR PRIMEIRO
-            setTimeout(() => {
-                setupLanguageSelectors();
-                initTooltips();
+            const navbarContainer = document.getElementById('navbar-container');
+            if (navbarContainer) {
+                navbarContainer.innerHTML = data;
                 
-                const userMenu = document.querySelector('.user-menu');
-                const userDropdownMenu = document.querySelector('.user-dropdown-menu');
-                
-                if (userMenu && userDropdownMenu) {
-                    userMenu.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        closeLanguageSelectors();
-                        
-                        const isVisible = userDropdownMenu.style.visibility === 'visible';
-                        if (isVisible) {
-                            closeUserMenu();
-                        } else {
-                            openUserMenu();
-                        }
-                    });
-                    
-                    userDropdownMenu.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                    });
+                // 🔥 NOTIFICAR que o navbar carregou
+                if (typeof window.onNavbarLoaded === 'function') {
+                    window.onNavbarLoaded();
                 }
-
-                // ⚠️ SÓ SINCRONIZAR DEPOIS QUE TUDO ESTIVER CARREGADO
-                setTimeout(() => syncWithDetectedLanguage(), 500);
                 
-            }, 100);
+                // Configurações após carregamento
+                setTimeout(() => {
+                    setupLanguageSelectors();
+                    initTooltips();
+                    
+                    const userMenu = document.querySelector('.user-menu');
+                    const userDropdownMenu = document.querySelector('.user-dropdown-menu');
+                    
+                    if (userMenu && userDropdownMenu) {
+                        userMenu.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            closeLanguageSelectors();
+                            
+                            const isVisible = userDropdownMenu.style.visibility === 'visible';
+                            if (isVisible) {
+                                closeUserMenu();
+                            } else {
+                                openUserMenu();
+                            }
+                        });
+                        
+                        userDropdownMenu.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+
+                    // Sincronizar com idioma detectado - REMOVIDO
+                    
+                }, 100);
+            }
         })
         .catch(error => {
             console.error('Error loading navbar:', error);
+            // 🔥 Notificar mesmo em caso de erro
+            if (typeof window.onNavbarLoaded === 'function') {
+                window.onNavbarLoaded();
+            }
         });
 }
 
 // Load footer from external file
 function loadFooter() {
     fetch('footer.html')
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                console.warn('Footer loading failed:', response.status);
+                return;
+            }
+            return response.text();
+        })
         .then(data => {
-            document.getElementById('footer-container').innerHTML = data;
+            const footerContainer = document.getElementById('footer-container');
+            if (footerContainer && data) {
+                footerContainer.innerHTML = data;
+            }
         })
         .catch(error => {
-            console.error('Error loading footer:', error);
+            console.warn('Error loading footer:', error);
         });
 }
 
@@ -271,47 +306,6 @@ function notifyNativeLanguageChange(langCode) {
     document.dispatchEvent(new CustomEvent('translationLanguageChanged', {
         detail: { language: langCode }
     }));
-}
-
-// Sincronizar com idioma detectado
-async function syncWithDetectedLanguage() {
-    try {
-        // Aguarda a detecção automática completar
-        const detectedLanguage = await languageDetector.detectLanguage();
-        applyLanguageToUI(detectedLanguage);
-        
-    } catch (error) {
-        console.error("Error syncing with detected language:", error);
-        applyLanguageToUI('pt'); // Fallback
-    }
-}
-
-function applyLanguageToUI(langCode) {
-    const userOptions = document.getElementById('user-language-options');
-    if (userOptions) {
-        const targetOption = userOptions.querySelector(`li[data-value="${langCode}"]`);
-        
-        if (targetOption) {
-            // Remover seleção atual
-            userOptions.querySelectorAll('li').forEach(li => {
-                li.classList.remove('selected');
-            });
-            
-            // Selecionar idioma detectado
-            targetOption.classList.add('selected');
-            
-            // Atualizar a bandeira exibida
-            const selectedLanguage = document.getElementById('user-language');
-            const flagImg = selectedLanguage.querySelector('img');
-            if (flagImg) {
-                const flag = targetOption.getAttribute('data-flag');
-                flagImg.src = `assets/images/flags/${flag}.svg`;
-                flagImg.alt = langCode.toUpperCase();
-            }
-            
-            console.log("UI sincronizada com idioma detectado:", langCode);
-        }
-    }
 }
 
 // Funções do menu do usuário
@@ -357,4 +351,19 @@ function initTooltips() {
             }
         });
     });
+}
+
+// 🔥 Função para verificar se o navbar está pronto
+function isNavbarReady() {
+    const navbarContainer = document.getElementById('navbar-container');
+    return navbarContainer && navbarContainer.innerHTML.trim() !== '';
+}
+
+// 🔥 Inicializar quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Navbar module loaded');
+    });
+} else {
+    console.log('Navbar module loaded (DOM already ready)');
 }
