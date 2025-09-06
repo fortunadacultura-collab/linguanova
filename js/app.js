@@ -17,7 +17,8 @@ let appConfig = {
     currentLine: 1,
     showTranslations: false,
     volume: 1,
-    initialized: false
+    initialized: false,
+    lastVolume: 0.7
 };
 
 // Gerenciador de idioma de tradução
@@ -90,6 +91,10 @@ async function init() {
         renderThemeCards();
         setupEventListeners();
         
+        // 🔥 ADICIONADO: Otimizações mobile
+        setupMobileOptimizations();
+        optimizeForMobile();
+        
         updateUITexts(translationManager.currentLanguage);
         
         appConfig.initialized = true;
@@ -126,13 +131,12 @@ async function loadDialogue(dialogueId) {
         console.log("Loading dialogue:", dialogueId);
         
         // Load dialogue from server
-        appConfig.dialogues[dialogueId] = await loadDialogueTxt(dialogueId);
-
-        const dialogue = appConfig.dialogues[dialogueId];
+        const dialogue = await loadDialogueTxt(dialogueId);
         if (!dialogue) {
             throw new Error('Dialogue not found: ' + dialogueId);
         }
 
+        appConfig.dialogues[dialogueId] = dialogue;
         appConfig.currentDialogue = dialogueId;
         domElements.dialogueTitle.textContent = dialogue.title;
         domElements.dialogueContent.innerHTML = '';
@@ -169,6 +173,15 @@ async function loadDialogue(dialogueId) {
                 playPhrase(index);
             });
             
+            // 🔥 ADICIONADO: Event listener para touch feedback
+            messageDiv.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            messageDiv.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
             domElements.dialogueContent.appendChild(messageDiv);
         });
 
@@ -186,13 +199,25 @@ async function loadDialogue(dialogueId) {
 }
 
 async function loadDialogueTxt(dialogueId) {
-    const response = await fetch(`languages/en/dialogues/${dialogueId}/${dialogueId}.txt`);
-    if (!response.ok) throw new Error('Dialogue not found');
-    const content = await response.text();
-    const parsedDialogue = parseDialogueTxt(content);
-    return ensureTranslations(parsedDialogue);
+    try {
+        // CORREÇÃO: Caminho correto para os diálogos
+        const response = await fetch(`languages/en/dialogues/${dialogueId}.txt`);
+        if (!response.ok) {
+            // Fallback: tentar com subpasta se não encontrar
+            const fallbackResponse = await fetch(`languages/en/dialogues/${dialogueId}/${dialogueId}.txt`);
+            if (!fallbackResponse.ok) throw new Error('Dialogue not found');
+            const content = await fallbackResponse.text();
+            return parseDialogueTxt(content);
+        }
+        const content = await response.text();
+        return parseDialogueTxt(content);
+    } catch (error) {
+        console.error('Error loading dialogue file:', error);
+        throw error;
+    }
 }
 
+// 🔥 CORREÇÃO: Função parseDialogueTxt corrigida
 function parseDialogueTxt(content) {
     const lines = content.split('\n');
     const dialogue = {
@@ -201,47 +226,64 @@ function parseDialogueTxt(content) {
     };
     
     let currentLine = {};
+    let currentSection = '';
     
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (!trimmedLine) continue;
+    for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) continue;
 
-        if (trimmedLine.startsWith('title:')) {
-            dialogue.title = trimmedLine.replace('title:', '').trim();
+        if (line.startsWith('title:')) {
+            dialogue.title = line.replace('title:', '').trim();
         } 
-        else if (trimmedLine.startsWith('speaker:')) {
-            if (currentLine.text) {
+        else if (line.startsWith('speaker:')) {
+            // Se já temos uma linha em progresso, adiciona ao diálogo
+            if (currentLine.speaker && currentLine.text) {
                 dialogue.lines.push(currentLine);
-                currentLine = {};
             }
-            currentLine.speaker = trimmedLine.replace('speaker:', '').trim();
-            currentLine.translations = {};
+            currentLine = {
+                speaker: line.replace('speaker:', '').trim(),
+                text: '',
+                translations: {}
+            };
+            currentSection = 'speaker';
         }
-        else if (trimmedLine.startsWith('text:')) {
-            currentLine.text = trimmedLine.replace('text:', '').trim();
+        else if (line.startsWith('text:')) {
+            currentLine.text = line.replace('text:', '').trim();
+            currentSection = 'text';
         }
-        else if (trimmedLine.startsWith('pt:')) {
-            currentLine.translations.pt = trimmedLine.replace('pt:', '').trim();
+        else if (line.startsWith('pt:')) {
+            currentLine.translations.pt = line.replace('pt:', '').trim();
+            currentSection = 'translation';
         }
-        else if (trimmedLine.startsWith('es:')) {
-            currentLine.translations.es = trimmedLine.replace('es:', '').trim();
+        else if (line.startsWith('es:')) {
+            currentLine.translations.es = line.replace('es:', '').trim();
+            currentSection = 'translation';
         }
-        else if (trimmedLine.startsWith('en:')) {
-            currentLine.translations.en = trimmedLine.replace('en:', '').trim();
+        else if (line.startsWith('en:')) {
+            currentLine.translations.en = line.replace('en:', '').trim();
+            currentSection = 'translation';
+        }
+        else if (currentSection === 'text' && currentLine.text) {
+            // Permite múltiplas linhas no texto
+            currentLine.text += ' ' + line;
         }
     }
     
-    if (currentLine.text) {
+    // Adiciona a última linha se existir
+    if (currentLine.speaker && currentLine.text) {
         dialogue.lines.push(currentLine);
     }
     
-    return dialogue;
+    return ensureTranslations(dialogue);
 }
 
 function ensureTranslations(dialogue) {
     dialogue.lines.forEach(line => {
         line.translations = line.translations || {};
-        // Não preencher com fallbacks aqui - só garantir que o objeto existe
+        // Garante que todas as traduções necessárias existam
+        if (!line.translations.pt) line.translations.pt = getFallbackTranslation('pt');
+        if (!line.translations.es) line.translations.es = getFallbackTranslation('es');
+        if (!line.translations.en) line.translations.en = getFallbackTranslation('en');
     });
     return dialogue;
 }
@@ -255,7 +297,7 @@ function getFallbackTranslation(lang) {
     return fallbacks[lang] || 'Translation not available';
 }
 
-// Audio functions - SEM FALLBACK
+// 🔥 CORREÇÃO: Audio functions com caminhos consistentes
 function preloadAudios(dialogueId) {
     // Clear existing audio elements
     appConfig.audioElements.forEach(audio => {
@@ -273,14 +315,19 @@ function preloadAudios(dialogueId) {
         const audio = new Audio();
         audio.preload = 'auto';
         
-        // Use the exact project structure path
+        // 🔥 CORREÇÃO: Caminho consistente baseado na estrutura do projeto
+        // Baseado na estrutura: languages/en/dialogues/{dialogueId}/audios/line_{index}.mp3
         audio.src = `languages/en/dialogues/${dialogueId}/audios/line_${index}.mp3`;
         audio.volume = appConfig.volume;
         
         audio.addEventListener('error', (e) => {
             console.error(`Error loading audio for line ${index}:`, e);
             console.error(`Audio path: ${audio.src}`);
-            showError(`Failed to load audio for line ${index}`);
+            
+            // 🔥 CORREÇÃO: Tentar caminho alternativo se o principal falhar
+            const alternativePath = `audios/${dialogueId}/line_${index}.mp3`;
+            console.log(`Trying alternative path: ${alternativePath}`);
+            audio.src = alternativePath;
         });
         
         audio.addEventListener('loadeddata', () => {
@@ -341,6 +388,9 @@ function playDialogue() {
     appConfig.isPlaying = true;
     updatePlayerControls();
     startProgressTracking();
+    
+    // 🔥 ADICIONADO: Fechar volume control se aberto
+    closeVolumeControl();
     
     // Resume from pause if we have a current audio
     if (appConfig.currentAudio && !appConfig.currentAudio.paused) {
@@ -454,6 +504,9 @@ function stopAllAudio() {
     removeAllHighlights();
     updateProgress(0);
     updatePlayerControls();
+    
+    // 🔥 ADICIONADO: Fechar volume control ao parar
+    closeVolumeControl();
 }
 
 function playPhrase(index) {
@@ -476,6 +529,9 @@ function playPhrase(index) {
     
     highlightCurrentPhrase();
     updatePlayerControls();
+    
+    // 🔥 ADICIONADO: Fechar volume control ao tocar frase
+    closeVolumeControl();
     
     if (!audio || !audio.src) {
         showError('Audio not available for this phrase');
@@ -514,10 +570,22 @@ function highlightCurrentPhrase() {
     if (appConfig.currentPhraseIndex < messages.length) {
         messages[appConfig.currentPhraseIndex].classList.add('highlighted');
         messages[appConfig.currentPhraseIndex].classList.add('playing');
-        messages[appConfig.currentPhraseIndex].scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-        });
+        
+        // 🔥 MELHORADO: Scroll otimizado para mobile
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                messages[appConfig.currentPhraseIndex].scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center',
+                    inline: 'nearest'
+                });
+            }, 100);
+        } else {
+            messages[appConfig.currentPhraseIndex].scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
     }
 }
 
@@ -658,6 +726,18 @@ function toggleMute() {
             domElements.volumeSlider.value = appConfig.lastVolume || 0.7;
         }
     }
+    
+    // 🔥 ADICIONADO: Fechar volume control após ajuste
+    setTimeout(closeVolumeControl, 1000);
+}
+
+// 🔥 NOVA FUNÇÃO: Fechar controle de volume
+function closeVolumeControl() {
+    if (window.innerWidth <= 768) {
+        document.querySelectorAll('.volume-control').forEach(control => {
+            control.classList.remove('active');
+        });
+    }
 }
 
 function renderThemeCards() {
@@ -752,22 +832,53 @@ function setupEventListeners() {
     
     if (domElements.playBtn) {
         domElements.playBtn.addEventListener('click', playDialogue);
+        // 🔥 ADICIONADO: Touch feedback para mobile
+        domElements.playBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.92)';
+        });
+        domElements.playBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     
     if (domElements.pauseBtn) {
         domElements.pauseBtn.addEventListener('click', pauseDialogue);
+        domElements.pauseBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.92)';
+        });
+        domElements.pauseBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     
     if (domElements.stopBtn) {
         domElements.stopBtn.addEventListener('click', stopDialogue);
+        domElements.stopBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.92)';
+        });
+        domElements.stopBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     
     if (domElements.translateToggleBtn) {
         domElements.translateToggleBtn.addEventListener('click', toggleTranslationMode);
+        domElements.translateToggleBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.92)';
+        });
+        domElements.translateToggleBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     
     if (domElements.volumeBtn) {
         domElements.volumeBtn.addEventListener('click', toggleMute);
+        domElements.volumeBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.92)';
+        });
+        domElements.volumeBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     
     if (domElements.volumeSlider) {
@@ -803,6 +914,10 @@ function setupEventListeners() {
                 highlightCurrentPhrase();
             }
         });
+        
+        // 🔥 ADICIONADO: Suporte a touch para progress bar
+        domElements.progressBar.addEventListener('touchstart', handleProgressBarTouch);
+        domElements.progressBar.addEventListener('touchmove', handleProgressBarTouch);
     }
 
     const loadMoreBtn = document.getElementById('load-more-btn');
@@ -810,9 +925,141 @@ function setupEventListeners() {
     
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', loadMoreThemes);
+        loadMoreBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        loadMoreBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
     }
     if (showLessBtn) {
         showLessBtn.addEventListener('click', showLessThemes);
+        showLessBtn.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        showLessBtn.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    }
+    
+    // 🔥 ADICIONADO: Listener para redimensionamento
+    window.addEventListener('resize', handleResize);
+}
+
+// 🔥 NOVA FUNÇÃO: Handle progress bar touch events
+function handleProgressBarTouch(e) {
+    if (e.touches && e.touches[0]) {
+        e.preventDefault();
+        const rect = domElements.progressBar.getBoundingClientRect();
+        const touch = e.touches[0];
+        const seekPercent = (touch.clientX - rect.left) / rect.width;
+        const seekTime = seekPercent * appConfig.totalDuration;
+        
+        let accumulatedTime = 0;
+        let newPhraseIndex = 0;
+        
+        for (let i = 0; i < appConfig.phraseDurations.length; i++) {
+            if (accumulatedTime + appConfig.phraseDurations[i] > seekTime) {
+                newPhraseIndex = i;
+                break;
+            }
+            accumulatedTime += appConfig.phraseDurations[i];
+        }
+        
+        appConfig.currentPhraseIndex = newPhraseIndex;
+        updateProgress(seekTime);
+        
+        if (appConfig.isPlaying) {
+            pauseDialogue();
+            playDialogue();
+        } else {
+            highlightCurrentPhrase();
+        }
+    }
+}
+
+// 🔥 NOVA FUNÇÃO: Handle window resize
+function handleResize() {
+    // Recalcular temas por linha
+    appConfig.themesPerLine = calculateThemesPerLine();
+    
+    // Re-otimizar para mobile
+    optimizeForMobile();
+    
+    // Re-renderizar temas se necessário
+    if (appConfig.initialized) {
+        renderThemeCards();
+    }
+}
+
+// 🔥 NOVAS FUNÇÕES: Otimizações Mobile
+function setupMobileOptimizations() {
+    // Toggle do controle de volume em mobile
+    const volumeBtn = document.getElementById('volume-btn');
+    const volumeControl = document.querySelector('.volume-control');
+    
+    if (volumeBtn && volumeControl) {
+        volumeBtn.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.stopPropagation();
+                volumeControl.classList.toggle('active');
+                
+                // Fecha outros controles se abertos
+                document.querySelectorAll('.volume-control').forEach(control => {
+                    if (control !== volumeControl && control.classList.contains('active')) {
+                        control.classList.remove('active');
+                    }
+                });
+            }
+        });
+        
+        // Fecha o volume ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && 
+                !e.target.closest('.volume-control') && 
+                volumeControl.classList.contains('active')) {
+                volumeControl.classList.remove('active');
+            }
+        });
+        
+        // Fecha ao tocar fora em touch devices
+        document.addEventListener('touchstart', function(e) {
+            if (window.innerWidth <= 768 && 
+                !e.target.closest('.volume-control') && 
+                volumeControl.classList.contains('active')) {
+                volumeControl.classList.remove('active');
+            }
+        });
+    }
+}
+
+function optimizeForMobile() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // Auto-close volume control quando player para
+        const originalStop = stopAllAudio;
+        stopAllAudio = function() {
+            originalStop.apply(this, arguments);
+            closeVolumeControl();
+        };
+
+        // Scroll suave melhorado para mobile
+        const originalHighlight = highlightCurrentPhrase;
+        highlightCurrentPhrase = function() {
+            originalHighlight.apply(this, arguments);
+            
+            setTimeout(() => {
+                const highlighted = document.querySelector('.message.highlighted');
+                if (highlighted) {
+                    highlighted.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }
+            }, 100);
+        };
     }
 }
 
@@ -883,6 +1130,7 @@ window.toggleTranslationMode = toggleTranslationMode;
 window.toggleMute = toggleMute;
 window.loadMoreThemes = loadMoreThemes;
 window.showLessThemes = showLessThemes;
+window.closeVolumeControl = closeVolumeControl;
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
