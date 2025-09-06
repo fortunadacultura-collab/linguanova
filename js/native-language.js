@@ -47,7 +47,9 @@ class NativeLanguageManager {
 
         // 2. Se não tiver preferência, detecta automaticamente
         try {
-            const detectedLanguage = await languageDetector.detectLanguage();
+            // 🔥 Otimização: Em mobile, não usar detecção por IP inicialmente
+            const isMobile = window.innerWidth <= 768;
+            const detectedLanguage = await languageDetector.detectLanguage(!isMobile);
             this.applyLanguage(detectedLanguage, true); // ⚠️ true = é detecção automática
             
         } catch (error) {
