@@ -38,22 +38,23 @@ class LanguageDetector {
         });
     }
 
-    async detectLanguage(useIP = false) {
+    async detectLanguage() {
         try {
-            // 1. Primeiro tenta detectar pelo navegador (mais confiável e rápido)
+            // Aguardar traduções carregarem (mas não bloquear se demorar)
+            await this.waitForTranslations();
+
+            // 1. Primeiro tenta detectar pelo navegador (mais confiável)
             const browserLang = this.detectFromBrowser();
             if (browserLang) {
                 console.log("Idioma detectado pelo navegador:", browserLang);
                 return browserLang;
             }
 
-            // 2. Se não conseguir e a chamada por IP for permitida, tenta pela geolocalização
-            if (useIP) {
-                const geoLang = await this.detectFromIP();
-                if (geoLang) {
-                    console.log("Idioma detectado por IP:", geoLang);
-                    return geoLang;
-                }
+            // 2. Se não conseguir, tenta pela geolocalização via IP
+            const geoLang = await this.detectFromIP();
+            if (geoLang) {
+                console.log("Idioma detectado por IP:", geoLang);
+                return geoLang;
             }
 
             // 3. Fallback para português
