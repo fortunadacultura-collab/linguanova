@@ -20,6 +20,45 @@ let appConfig = {
     initialized: false
 };
 
+// Gerenciador de idioma de tradução
+const translationManager = {
+    currentLanguage: 'pt',
+    
+    init() {
+        this.setupEventListeners();
+        this.loadStoredLanguage();
+    },
+    
+    setupEventListeners() {
+        document.addEventListener('translationLanguageChanged', (e) => {
+            this.changeLanguage(e.detail.language);
+        });
+        
+        document.addEventListener('nativeLanguageChanged', (e) => {
+            this.changeLanguage(e.detail.language);
+        });
+    },
+    
+    loadStoredLanguage() {
+        const storedLang = localStorage.getItem('translationLanguage') || 'pt';
+        this.changeLanguage(storedLang);
+    },
+    
+    changeLanguage(langCode) {
+        this.currentLanguage = langCode;
+        localStorage.setItem('translationLanguage', langCode);
+        
+        if (appConfig.initialized) {
+            this.updateAllTranslations();
+        }
+    },
+    
+    updateAllTranslations() {
+        updateDialogueTranslations(this.currentLanguage);
+        updateUITexts(this.currentLanguage);
+    }
+};
+
 // DOM Elements cache
 let domElements = {};
 
@@ -35,6 +74,9 @@ async function init() {
         
         initDomElements();
         
+        // Inicializar o gerenciador de traduções PRIMEIRO
+        translationManager.init();
+        
         // Load data from external JSON
         const response = await fetch('data/data.json');
         if (!response.ok) throw new Error('Failed to load configuration');
@@ -48,7 +90,7 @@ async function init() {
         renderThemeCards();
         setupEventListeners();
         
-        updateUITexts(appConfig.currentLanguage);
+        updateUITexts(translationManager.currentLanguage);
         
         appConfig.initialized = true;
         console.log("Application initialized successfully");
@@ -115,8 +157,8 @@ async function loadDialogue(dialogueId) {
             
             const translationDiv = document.createElement('div');
             translationDiv.className = 'translation-text';
-            translationDiv.setAttribute('data-lang', appConfig.currentLanguage);
-            translationDiv.textContent = line.translations[appConfig.currentLanguage] || '';
+            translationDiv.setAttribute('data-lang', translationManager.currentLanguage);
+            translationDiv.textContent = line.translations[translationManager.currentLanguage] || getFallbackTranslation(translationManager.currentLanguage);
             translationDiv.style.display = 'none';
             
             messageDiv.appendChild(infoDiv);
@@ -147,7 +189,8 @@ async function loadDialogueTxt(dialogueId) {
     const response = await fetch(`languages/en/dialogues/${dialogueId}/${dialogueId}.txt`);
     if (!response.ok) throw new Error('Dialogue not found');
     const content = await response.text();
-    return parseDialogueTxt(content);
+    const parsedDialogue = parseDialogueTxt(content);
+    return ensureTranslations(parsedDialogue);
 }
 
 function parseDialogueTxt(content) {
@@ -158,34 +201,33 @@ function parseDialogueTxt(content) {
     };
     
     let currentLine = {};
-    const txtFormat = appConfig.data.settings.dialogueTemplates.txtFormat;
     
     for (const line of lines) {
         const trimmedLine = line.trim();
         if (!trimmedLine) continue;
 
-        if (trimmedLine.startsWith(txtFormat.titlePrefix)) {
-            dialogue.title = trimmedLine.replace(txtFormat.titlePrefix, '').trim();
+        if (trimmedLine.startsWith('title:')) {
+            dialogue.title = trimmedLine.replace('title:', '').trim();
         } 
-        else if (trimmedLine.startsWith(txtFormat.speakerPrefix)) {
+        else if (trimmedLine.startsWith('speaker:')) {
             if (currentLine.text) {
                 dialogue.lines.push(currentLine);
                 currentLine = {};
             }
-            currentLine.speaker = trimmedLine.replace(txtFormat.speakerPrefix, '').trim();
-        }
-        else if (trimmedLine.startsWith(txtFormat.textPrefix)) {
-            currentLine.text = trimmedLine.replace(txtFormat.textPrefix, '').trim();
+            currentLine.speaker = trimmedLine.replace('speaker:', '').trim();
             currentLine.translations = {};
         }
-        else if (trimmedLine.startsWith(txtFormat.translationPrefixes.pt)) {
-            currentLine.translations.pt = trimmedLine.replace(txtFormat.translationPrefixes.pt, '').trim();
+        else if (trimmedLine.startsWith('text:')) {
+            currentLine.text = trimmedLine.replace('text:', '').trim();
         }
-        else if (trimmedLine.startsWith(txtFormat.translationPrefixes.es)) {
-            currentLine.translations.es = trimmedLine.replace(txtFormat.translationPrefixes.es, '').trim();
+        else if (trimmedLine.startsWith('pt:')) {
+            currentLine.translations.pt = trimmedLine.replace('pt:', '').trim();
         }
-        else if (trimmedLine.startsWith(txtFormat.translationPrefixes.en)) {
-            currentLine.translations.en = trimmedLine.replace(txtFormat.translationPrefixes.en, '').trim();
+        else if (trimmedLine.startsWith('es:')) {
+            currentLine.translations.es = trimmedLine.replace('es:', '').trim();
+        }
+        else if (trimmedLine.startsWith('en:')) {
+            currentLine.translations.en = trimmedLine.replace('en:', '').trim();
         }
     }
     
@@ -194,6 +236,23 @@ function parseDialogueTxt(content) {
     }
     
     return dialogue;
+}
+
+function ensureTranslations(dialogue) {
+    dialogue.lines.forEach(line => {
+        line.translations = line.translations || {};
+        // Não preencher com fallbacks aqui - só garantir que o objeto existe
+    });
+    return dialogue;
+}
+
+function getFallbackTranslation(lang) {
+    const fallbacks = {
+        'pt': 'Tradução não disponível',
+        'es': 'Traducción no disponible', 
+        'en': 'Translation not available'
+    };
+    return fallbacks[lang] || 'Translation not available';
 }
 
 // Audio functions - SEM FALLBACK
@@ -271,22 +330,27 @@ function updateTotalDuration() {
 
 // Player control functions
 function playDialogue() {
-    console.log("Play button clicked");
+    console.log("Play button clicked - Entering sequence mode");
     
     if (appConfig.isPlaying) {
         pauseDialogue();
         return;
     }
     
-    // Resume from pause
-    if (appConfig.currentAudio && appConfig.currentAudio.paused) {
-        appConfig.isPlaying = true;
-        updatePlayerControls();
-        startProgressTracking();
+    // ⚠️ CORREÇÃO: Sempre entrar no modo sequência quando clicar em Play
+    appConfig.isPlaying = true;
+    updatePlayerControls();
+    startProgressTracking();
+    
+    // Resume from pause if we have a current audio
+    if (appConfig.currentAudio && !appConfig.currentAudio.paused) {
+        console.log("Resuming from paused state");
         // Ensure the onended handler is set for sequential playback
         appConfig.currentAudio.onended = () => {
-            appConfig.currentPhraseIndex++;
-            playCurrentPhrase();
+            if (appConfig.isPlaying) {
+                appConfig.currentPhraseIndex++;
+                playCurrentPhrase();
+            }
         };
         appConfig.currentAudio.play().catch(error => {
             console.error('Audio playback failed:', error);
@@ -295,19 +359,19 @@ function playDialogue() {
         return;
     }
 
-    // Start from the current phrase index (or 0 if stopped)
-    appConfig.isPlaying = true;
-    updatePlayerControls();
-    startProgressTracking();
+    // Start from the current phrase index
+    console.log("Starting sequence from phrase:", appConfig.currentPhraseIndex);
     playCurrentPhrase();
 }
 
 function playCurrentPhrase() {
     if (!appConfig.isPlaying || appConfig.currentPhraseIndex >= appConfig.audioElements.length) {
+        console.log("Stopping playback - end of dialogue or not in sequence mode");
         stopAllAudio();
         return;
     }
     
+    console.log("Playing phrase in sequence:", appConfig.currentPhraseIndex);
     highlightCurrentPhrase();
     
     const audio = appConfig.audioElements[appConfig.currentPhraseIndex];
@@ -315,26 +379,41 @@ function playCurrentPhrase() {
     audio.volume = appConfig.volume;
     
     if (!audio || !audio.src) {
-        showError('Audio not available for phrase ' + appConfig.currentPhraseIndex);
+        console.error('Audio not available for phrase', appConfig.currentPhraseIndex);
+        // Avançar para a próxima frase na sequência
+        appConfig.currentPhraseIndex++;
+        playCurrentPhrase();
         return;
     }
     
-    // Do not reset time if resuming from pause
-    if (!audio.paused) {
-        audio.currentTime = 0;
-    }
+    // Sempre resetar o tempo para tocar do início na sequência
+    audio.currentTime = 0;
 
     const playPromise = audio.play();
     
     if (playPromise !== undefined) {
         playPromise.then(() => {
+            // ⚠️ Configurar para continuar a sequência automaticamente
             audio.onended = () => {
-                appConfig.currentPhraseIndex++;
-                playCurrentPhrase();
+                if (appConfig.isPlaying) {
+                    appConfig.currentPhraseIndex++;
+                    if (appConfig.currentPhraseIndex < appConfig.audioElements.length) {
+                        playCurrentPhrase();
+                    } else {
+                        // Fim do diálogo
+                        console.log("End of dialogue reached");
+                        stopAllAudio();
+                    }
+                }
             };
         }).catch(error => {
             console.error('Audio playback failed:', error);
             showError('Audio playback failed: ' + error.message);
+            // Avançar para a próxima frase mesmo com erro
+            appConfig.currentPhraseIndex++;
+            if (appConfig.isPlaying && appConfig.currentPhraseIndex < appConfig.audioElements.length) {
+                playCurrentPhrase();
+            }
         });
     }
 }
@@ -378,10 +457,13 @@ function stopAllAudio() {
 }
 
 function playPhrase(index) {
-    console.log("Playing phrase:", index);
+    console.log("Playing phrase:", index, "(Single phrase mode)");
     
     stopAllAudio(); // Stop any ongoing playback
-    appConfig.currentPhraseIndex = index; // Set the starting point
+    
+    // ⚠️ CORREÇÃO: Modo de frase única - não deve continuar automaticamente
+    appConfig.isPlaying = false; // Forçar modo não-sequência
+    appConfig.currentPhraseIndex = index; // Set the starting point apenas para referência
     
     if (index >= appConfig.audioElements.length) {
         showError('Phrase index out of range');
@@ -390,7 +472,6 @@ function playPhrase(index) {
     
     const audio = appConfig.audioElements[index];
     appConfig.currentAudio = audio;
-    appConfig.isPlaying = true;
     audio.volume = appConfig.volume;
     
     highlightCurrentPhrase();
@@ -406,14 +487,15 @@ function playPhrase(index) {
     
     if (playPromise !== undefined) {
         playPromise.then(() => {
-            // When a single phrase ends, it just stops.
+            // ⚠️ CORREÇÃO: Modo de frase única - NÃO continuar automaticamente
             audio.onended = () => {
                 removeAllHighlights();
+                // ⚠️ IMPORTANTE: Não avançar para a próxima frase
+                // Manter o currentPhraseIndex no mesmo lugar para que o Play continue daqui
                 appConfig.isPlaying = false;
                 updatePlayerControls();
-                // The player is now "paused" at the end of this phrase.
-                // Clicking main play will resume sequence from the next phrase.
-                appConfig.currentPhraseIndex++; 
+                
+                console.log("Single phrase playback finished. Ready for manual play.");
             };
         }).catch(error => {
             console.error('Audio playback failed:', error);
@@ -612,7 +694,7 @@ function updateThemeControls() {
     
     if (!loadMoreBtn || !showLessBtn || !appConfig.data || !appConfig.data.translations) return;
     
-    const translations = appConfig.data.translations[appConfig.currentLanguage] || appConfig.data.translations['en'] || {};
+    const translations = appConfig.data.translations[translationManager.currentLanguage] || appConfig.data.translations['en'] || {};
     
     const loadMoreText = loadMoreBtn.querySelector('span');
     const showLessText = showLessBtn.querySelector('span');
@@ -771,7 +853,6 @@ function calculateThemesPerLine() {
 function updateUITexts(langCode) {
     if (!appConfig.data || !appConfig.data.translations) return;
     
-    appConfig.currentLanguage = langCode;
     const translations = appConfig.data.translations[langCode] || appConfig.data.translations['en'] || {};
     
     document.querySelectorAll('[data-translate]').forEach(element => {
@@ -780,8 +861,6 @@ function updateUITexts(langCode) {
             element.textContent = translations[key];
         }
     });
-    
-    updateDialogueTranslations(langCode);
 }
 
 function updateDialogueTranslations(langCode) {
@@ -789,12 +868,10 @@ function updateDialogueTranslations(langCode) {
     if (!dialogue) return;
     
     document.querySelectorAll('.message').forEach((messageElement, index) => {
-        if (dialogue.lines[index] && dialogue.lines[index].translations[langCode]) {
-            const translationDiv = messageElement.querySelector('.translation-text');
-            if (translationDiv) {
-                translationDiv.textContent = dialogue.lines[index].translations[langCode];
-                translationDiv.setAttribute('data-lang', langCode);
-            }
+        const translationDiv = messageElement.querySelector('.translation-text');
+        if (translationDiv && dialogue.lines[index]) {
+            translationDiv.textContent = dialogue.lines[index].translations[langCode] || getFallbackTranslation(langCode);
+            translationDiv.setAttribute('data-lang', langCode);
         }
     });
 }

@@ -71,6 +71,13 @@ class LanguageManager {
             detail: { language: langCode }
         }));
 
+        // NOTIFICAR também mudança de tradução se for idioma suportado
+        if (['pt', 'es', 'en'].includes(langCode)) {
+            document.dispatchEvent(new CustomEvent('translationLanguageChanged', {
+                detail: { language: langCode }
+            }));
+        }
+
         console.log(`Language changed to: ${langCode}`);
     }
 

@@ -142,10 +142,8 @@ function setupLanguageOptions(optionsContainer, type) {
                 this.closest('.language-selector').classList.remove('active');
                 window.location.href = `study-${value}.html`;
             } else if (type === 'native') {
-                // Disparar evento para mudança de idioma nativo
-                document.dispatchEvent(new CustomEvent('nativeLanguageChanged', {
-                    detail: { language: value }
-                }));
+                // NOTIFICAR a mudança de idioma de tradução
+                notifyNativeLanguageChange(value);
                 
                 // Fechar menu
                 this.closest('.language-selector').classList.remove('active');
@@ -189,25 +187,21 @@ function loadNavbar() {
         .then(response => response.text())
         .then(data => {
             document.getElementById('navbar-container').innerHTML = data;
-            // Inicializar os seletores de idioma após o carregamento
+            
+            // ⚠️ AGUARDAR O NATIVE-LANGUAGE CARREGAR PRIMEIRO
             setTimeout(() => {
                 setupLanguageSelectors();
                 initTooltips();
                 
-                // Menu do usuário com dropdown
                 const userMenu = document.querySelector('.user-menu');
                 const userDropdownMenu = document.querySelector('.user-dropdown-menu');
                 
                 if (userMenu && userDropdownMenu) {
                     userMenu.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        
-                        // Fechar outros menus abertos
                         closeLanguageSelectors();
                         
-                        // Alternar visibilidade do menu do usuário
                         const isVisible = userDropdownMenu.style.visibility === 'visible';
-                        
                         if (isVisible) {
                             closeUserMenu();
                         } else {
@@ -215,11 +209,14 @@ function loadNavbar() {
                         }
                     });
                     
-                    // Prevenir que o clique no menu propague
                     userDropdownMenu.addEventListener('click', function(e) {
                         e.stopPropagation();
                     });
                 }
+
+                // ⚠️ SÓ SINCRONIZAR DEPOIS QUE TUDO ESTIVER CARREGADO
+                setTimeout(() => syncWithDetectedLanguage(), 500);
+                
             }, 100);
         })
         .catch(error => {
@@ -255,6 +252,65 @@ function closeUserMenu() {
         userDropdownMenu.style.opacity = '0';
         userDropdownMenu.style.visibility = 'hidden';
         userDropdownMenu.style.transform = 'translateY(10px)';
+    }
+}
+
+// Função para obter o idioma nativo selecionado
+function getSelectedNativeLanguage() {
+    const selectedOption = document.querySelector('#user-language-options li.selected');
+    return selectedOption ? selectedOption.getAttribute('data-value') : 'pt';
+}
+
+// Função para notificar mudança de idioma nativo
+function notifyNativeLanguageChange(langCode) {
+    document.dispatchEvent(new CustomEvent('nativeLanguageChanged', {
+        detail: { language: langCode }
+    }));
+    
+    // Também disparar evento para o app.js
+    document.dispatchEvent(new CustomEvent('translationLanguageChanged', {
+        detail: { language: langCode }
+    }));
+}
+
+// Sincronizar com idioma detectado
+async function syncWithDetectedLanguage() {
+    try {
+        // Aguarda a detecção automática completar
+        const detectedLanguage = await languageDetector.detectLanguage();
+        applyLanguageToUI(detectedLanguage);
+        
+    } catch (error) {
+        console.error("Error syncing with detected language:", error);
+        applyLanguageToUI('pt'); // Fallback
+    }
+}
+
+function applyLanguageToUI(langCode) {
+    const userOptions = document.getElementById('user-language-options');
+    if (userOptions) {
+        const targetOption = userOptions.querySelector(`li[data-value="${langCode}"]`);
+        
+        if (targetOption) {
+            // Remover seleção atual
+            userOptions.querySelectorAll('li').forEach(li => {
+                li.classList.remove('selected');
+            });
+            
+            // Selecionar idioma detectado
+            targetOption.classList.add('selected');
+            
+            // Atualizar a bandeira exibida
+            const selectedLanguage = document.getElementById('user-language');
+            const flagImg = selectedLanguage.querySelector('img');
+            if (flagImg) {
+                const flag = targetOption.getAttribute('data-flag');
+                flagImg.src = `assets/images/flags/${flag}.svg`;
+                flagImg.alt = langCode.toUpperCase();
+            }
+            
+            console.log("UI sincronizada com idioma detectado:", langCode);
+        }
     }
 }
 

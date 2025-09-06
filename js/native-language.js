@@ -1,20 +1,17 @@
-// Native language translations manager
+// native-language.js - CORREÇÃO DO LOOP INFINITO
 class NativeLanguageManager {
     constructor() {
         this.currentNativeLanguage = 'pt';
         this.translations = {};
+        this.isChangingLanguage = false; // ⚠️ FLAG PARA PREVENIR LOOP
         this.init();
     }
 
     async init() {
         await this.loadTranslations();
-        this.loadUserPreference();
+        await this.loadUserPreference();
         
-        // Configurar event listeners depois de um breve delay
-        // para garantir que a navbar esteja carregada
-        setTimeout(() => {
-            this.setupEventListeners();
-        }, 500);
+        this.setupEventListeners();
     }
 
     async loadTranslations() {
@@ -24,56 +21,79 @@ class NativeLanguageManager {
             this.translations = await response.json();
         } catch (error) {
             console.error('Error loading translations:', error);
-            // Fallback to empty translations
             this.translations = {};
         }
     }
 
     setupEventListeners() {
-        // Escutar evento de mudança de idioma nativo
+        // ⚠️ CORREÇÃO: Usar once ou verificar se já está processando
         document.addEventListener('nativeLanguageChanged', (e) => {
-            this.changeNativeLanguage(e.detail.language);
+            if (!this.isChangingLanguage && e.detail.language !== this.currentNativeLanguage) {
+                this.changeNativeLanguage(e.detail.language);
+            }
         });
     }
 
-    loadUserPreference() {
-        // Try to load from localStorage
+    async loadUserPreference() {
+        // 1. Primeiro verifica se já tem preferência salva
         const savedLanguage = localStorage.getItem('nativeLanguage');
         if (savedLanguage && this.translations[savedLanguage]) {
             this.currentNativeLanguage = savedLanguage;
             this.updateUITexts(this.currentNativeLanguage);
             this.updateLanguageSelector(this.currentNativeLanguage);
+            this.notifyLanguageChange(savedLanguage, false); // ⚠️ false = não redisparar evento
+            return;
         }
-        
-        // Alternatively, load from user profile
-        this.loadFromUserProfile();
+
+        // 2. Se não tiver preferência, detecta automaticamente
+        try {
+            const detectedLanguage = await languageDetector.detectLanguage();
+            this.applyLanguage(detectedLanguage, true); // ⚠️ true = é detecção automática
+            
+        } catch (error) {
+            console.error("Erro na detecção automática:", error);
+            // 3. Fallback para português
+            this.applyLanguage('pt', true);
+        }
     }
 
-    async loadFromUserProfile() {
-        try {
-            const response = await fetch('data/user-profiles.json');
-            if (!response.ok) throw new Error('Failed to load user profiles');
-            const profiles = await response.json();
-            
-            // In a real app, you would get the current user's profile
-            const userProfile = profiles.users[0]; // Assuming first user for demo
-            
-            if (userProfile && userProfile.nativeLanguage) {
-                this.currentNativeLanguage = userProfile.nativeLanguage;
-                this.updateUITexts(this.currentNativeLanguage);
-                this.updateLanguageSelector(this.currentNativeLanguage);
-            }
-        } catch (error) {
-            console.error('Error loading user profile:', error);
+    // ⚠️ NOVA FUNÇÃO: Aplicar idioma sem causar loop
+    applyLanguage(langCode, isAutoDetection = false) {
+        if (this.isChangingLanguage || langCode === this.currentNativeLanguage) {
+            return;
+        }
+
+        this.isChangingLanguage = true;
+        
+        this.currentNativeLanguage = langCode;
+        this.updateUITexts(langCode);
+        this.updateLanguageSelector(langCode);
+        
+        if (isAutoDetection) {
+            // Salva a detecção automática para futuro
+            localStorage.setItem('nativeLanguage', langCode);
+        }
+        
+        this.notifyLanguageChange(langCode, false); // ⚠️ Não redisparar evento
+        
+        this.isChangingLanguage = false;
+    }
+
+    notifyLanguageChange(langCode, shouldDispatch = true) {
+        if (shouldDispatch) {
+            document.dispatchEvent(new CustomEvent('translationLanguageChanged', {
+                detail: { language: langCode }
+            }));
         }
     }
 
     changeNativeLanguage(langCode) {
-        if (!this.translations[langCode]) {
-            console.error(`Translations for ${langCode} not available`);
+        if (this.isChangingLanguage || !this.translations[langCode]) {
             return;
         }
 
+        this.isChangingLanguage = true;
+        
         this.currentNativeLanguage = langCode;
         this.updateUITexts(langCode);
         this.updateLanguageSelector(langCode);
@@ -81,31 +101,26 @@ class NativeLanguageManager {
 
         console.log(`Native language changed to: ${langCode}`);
         
-        // Disparar evento para que outros componentes saibam da mudança
-        document.dispatchEvent(new CustomEvent('nativeLanguageUpdated', {
-            detail: { language: langCode }
-        }));
+        this.notifyLanguageChange(langCode, true);
+        
+        this.isChangingLanguage = false;
     }
 
     updateLanguageSelector(langCode) {
-        // Atualizar o seletor de idioma visualmente
         const userSelectedLanguage = document.getElementById('user-language');
         const userLanguageOptions = document.getElementById('user-language-options');
         
         if (userSelectedLanguage && userLanguageOptions) {
-            // Encontrar a opção correspondente ao idioma
             const option = userLanguageOptions.querySelector(`li[data-value="${langCode}"]`);
             if (option) {
                 const flag = option.getAttribute('data-flag');
                 
-                // Atualizar a flag exibida
                 const flagImg = userSelectedLanguage.querySelector('img');
                 if (flagImg) {
                     flagImg.src = `assets/images/flags/${flag}.svg`;
                     flagImg.alt = langCode.toUpperCase();
                 }
                 
-                // Atualizar a seleção visual
                 userLanguageOptions.querySelectorAll('li').forEach(li => {
                     li.classList.remove('selected');
                 });
@@ -117,7 +132,6 @@ class NativeLanguageManager {
     updateUITexts(langCode) {
         const translations = this.translations[langCode] || {};
         
-        // Update all elements with data-translate attribute
         document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.getAttribute('data-translate');
             if (translations[key]) {
@@ -125,7 +139,6 @@ class NativeLanguageManager {
             }
         });
 
-        // Update page title if it has a translation
         const pageTitle = document.querySelector('title');
         if (pageTitle && translations['pageTitle']) {
             const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
@@ -138,10 +151,7 @@ class NativeLanguageManager {
     }
 
     saveNativeLanguagePreference(langCode) {
-        // Save to localStorage
         localStorage.setItem('nativeLanguage', langCode);
-        
-        // In a real app, you would also save to the user's profile on the server
         console.log(`Saved native language preference: ${langCode}`);
     }
 
@@ -157,7 +167,5 @@ class NativeLanguageManager {
 
 // Initialize native language manager
 const nativeLanguageManager = new NativeLanguageManager();
-
-// Export for use in other modules
 window.nativeLanguageManager = nativeLanguageManager;
 window.getTranslation = (key) => nativeLanguageManager.getTranslation(key);
