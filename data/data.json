@@ -292,7 +292,7 @@
         "textPrefix": "text:",
         "translationPrefixes": {
           "pt": "pt:",
-          "es": "es:",
+          "es": "es:", 
           "en": "en:"
         }
       }
