@@ -1,0 +1,100 @@
+title: Job Interviews
+speaker: Emily
+text: Mike, got any tips for staying calm during job interviews?
+pt: Mike, tem alguma dica para manter a calma durante entrevistas de emprego?
+es: Mike, ¿tienes algún consejo para mantener la calma durante las entrevistas de trabajo?
+
+speaker: Mike
+text: Definitely. Deep breathing helps before you walk in.
+pt: Com certeza. Respirar fundo ajuda antes de você entrar.
+es: Definitivamente. Respirar profundo ayuda antes de entrar.
+
+speaker: Emily
+text: I try to prepare answers but sometimes get thrown off by surprise questions.
+pt: Eu tento preparar respostas, mas às vezes me surpreendo com perguntas inesperadas.
+es: Intento preparar respuestas pero a veces me desconciertan preguntas sorpresa.
+
+speaker: Mike
+text: That happens. It’s okay to pause, take a breath, and think.
+pt: Isso acontece. É normal fazer uma pausa, respirar e pensar.
+es: Eso pasa. Está bien hacer una pausa, respirar y pensar.
+
+speaker: Emily
+text: Good point. I tend to rush and sound nervous.
+pt: Bom ponto. Eu costumo me apressar e parecer nervosa.
+es: Buen punto. Suelo apresurarme y sonar nerviosa.
+
+speaker: Mike
+text: Practice makes perfect. Mock interviews can boost confidence.
+pt: A prática leva à perfeição. Entrevistas simuladas podem aumentar a confiança.
+es: La práctica hace al maestro. Las entrevistas simuladas pueden aumentar la confianza.
+
+speaker: Emily
+text: Have you ever had an interview go completely off script?
+pt: Você já teve uma entrevista que saiu completamente do script?
+es: ¿Alguna vez has tenido una entrevista que se salió completamente del guión?
+
+speaker: Mike
+text: Oh yeah, once I was asked about a skill I barely had.
+pt: Ah sim, uma vez me perguntaram sobre uma habilidade que eu mal tinha.
+es: Oh sí, una vez me preguntaron sobre una habilidad que barely tenía.
+
+speaker: Emily
+text: How’d you handle that?
+pt: Como você lidou com isso?
+es: ¿Cómo manejaste eso?
+
+speaker: Mike
+text: Admitted honesty, then highlighted my eagerness to learn.
+pt: Admiti com honestidade, depois destaquei minha vontade de aprender.
+es: Admití con honestidad, luego resalté mi entusiasmo por aprender.
+
+speaker: Emily
+text: Smart move. Interviewers appreciate that.
+pt: Jogada inteligente. Os entrevistadores apreciam isso.
+es: Jugada inteligente. Los entrevistadores aprecian eso.
+
+speaker: Mike
+text: Also, dress appropriately but comfortably.
+pt: Além disso, vista-se adequadamente, mas com conforto.
+es: Además, vístete apropiadamente pero cómodamente.
+
+speaker: Emily
+text: Right. First impressions start with appearance.
+pt: Certo. As primeiras impressões começam com a aparência.
+es: Cierto. Las primeras impresiones comienzan con la apariencia.
+
+speaker: Mike
+text: Any questions you like to ask at the end?
+pt: Alguma pergunta que você goste de fazer no final?
+es: ¿Alguna pregunta que te guste hacer al final?
+
+speaker: Emily
+text: I usually ask about company culture and team dynamics.
+pt: Normalmente pergunto sobre a cultura da empresa e a dinâmica da equipe.
+es: Normalmente pregunto sobre la cultura de la empresa y la dinámica del equipo.
+
+speaker: Mike
+text: Great questions! Shows real interest.
+pt: Ótimas perguntas! Mostra interesse real.
+es: ¡Excelentes preguntas! Muestra interés real.
+
+speaker: Emily
+text: I try to engage authentically rather than just tick boxes.
+pt: Eu tento me envolver autenticamente em vez de apenas marcar caixas.
+es: Intento participar auténticamente en lugar de solo marcar casillas.
+
+speaker: Mike
+text: Exactly. Interviews are two-way streets.
+pt: Exatamente. Entrevistas são mão dupla.
+es: Exactamente. Las entrevistas son de doble sentido.
+
+speaker: Emily
+text: Thanks, Mike. Feeling better about my next one!
+pt: Obrigada, Mike. Me sinto melhor sobre a minha próxima!
+es: Gracias, Mike. ¡Me siento mejor sobre mi próxima!
+
+speaker: Mike
+text: You’ll nail it, Emily. Just be yourself.
+pt: Você vai arrasar, Emily. Apenas seja você mesma.
+es: Lo harás genial, Emily. Solo sé tú misma.
