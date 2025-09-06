@@ -203,6 +203,8 @@
         padding-bottom: 8px;
         -webkit-overflow-scrolling: touch;
         margin-bottom: 1rem;
+        min-height: 60px;
+        align-items: center;
     }
     
     .player-btn {
@@ -212,42 +214,104 @@
         min-height: 50px !important;
         padding: 14px !important;
         flex-shrink: 0;
+        margin: 0 2px;
+        transition: all 0.2s ease;
     }
     
     .player-btn i {
         font-size: 1.2rem !important;
     }
     
-    /* Volume Control Compacto e Expansível */
-    .volume-control {
-        flex-direction: row;
-        align-items: center;
-        gap: 6px;
-        margin-top: 0 !important;
+    /* Correção específica para o botão de tradução */
+    .player-btn#translate-toggle-btn {
         position: relative;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+    
+    .player-btn#translate-toggle-btn.active {
+        background: var(--secondary);
+        transform: none !important;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+    }
+    
+    /* Volume Control Inteligente */
+    .volume-control {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-top: 0 !important;
+    }
+    
+    .volume-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
     }
     
     #volume-slider {
-        width: 60px;
         display: none;
         position: absolute;
-        bottom: -35px;
+        bottom: 45px;
         left: 50%;
-        transform: translateX(-50%);
-        background: white;
-        padding: 8px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateX(-50%) rotate(-90deg);
+        transform-origin: center;
+        width: 80px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 3px;
+        padding: 0;
+        margin: 0;
         z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     
     .volume-control.active #volume-slider {
         display: block;
     }
     
-    .volume-btn {
-        width: 40px;
-        height: 40px;
+    /* Melhorar o thumb do slider para touch */
+    #volume-slider::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        -webkit-appearance: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    #volume-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Indicador visual de volume */
+    .volume-level-indicator {
+        display: none;
+        position: absolute;
+        bottom: 35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--primary);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        z-index: 1001;
+    }
+    
+    .volume-control.active .volume-level-indicator {
+        display: block;
     }
     
     /* Progress Bar Otimizada */
@@ -332,7 +396,7 @@
     
     /* Feedback Tátil Melhorado */
     .player-btn:active {
-        transform: scale(0.92);
+        transform: scale(0.92) !important;
         transition: transform 0.1s ease;
     }
     
@@ -351,12 +415,17 @@
         padding: 0.7rem 0.8rem;
     }
     
+    .player-controls {
+        gap: 4px;
+        padding: 0 4px;
+    }
+    
     .player-btn {
-        width: 45px !important;
-        height: 45px !important;
-        min-width: 45px !important;
-        min-height: 45px !important;
-        padding: 12px !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 10px !important;
     }
     
     .player-btn i {
@@ -369,8 +438,14 @@
     }
     
     #volume-slider {
-        width: 50px;
-        bottom: -32px;
+        width: 70px;
+        bottom: 42px;
+    }
+    
+    .volume-level-indicator {
+        bottom: 32px;
+        font-size: 0.65rem;
+        padding: 3px 6px;
     }
     
     .message {
@@ -432,6 +507,14 @@
     .player-btn i {
         font-size: 1.1rem !important;
     }
+    
+    #volume-slider {
+        bottom: 42px;
+    }
+    
+    .volume-level-indicator {
+        bottom: 32px;
+    }
 }
 
 /* ============================================
@@ -459,6 +542,12 @@
     /* Melhorar scrolling */
     .dialogue-container {
         -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Correção específica para iOS */
+    .player-btn#translate-toggle-btn.active {
+        transform: none !important;
+        scale: none !important;
     }
 }
 
@@ -517,13 +606,53 @@
         -webkit-backdrop-filter: blur(20px);
     }
     
+    #volume-slider {
+        background: rgba(255, 255, 255, 0.9);
+    }
+    
     @media (prefers-color-scheme: dark) {
         .media-player {
             background: rgba(30, 30, 40, 0.95);
         }
         
         #volume-slider {
-            background: #2a2a3a;
+            background: rgba(50, 50, 60, 0.9);
         }
+        
+        .volume-level-indicator {
+            background: var(--secondary);
+        }
+    }
+}
+
+/* ============================================
+   ANIMAÇÕES SUAVES PARA MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .volume-control #volume-slider,
+    .volume-control .volume-level-indicator {
+        transition: all 0.3s ease;
+        animation: slideInUp 0.3s ease;
+    }
+    
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) rotate(-90deg) translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) rotate(-90deg) translateY(0);
+        }
+    }
+    
+    .volume-level-indicator {
+        animation: fadeIn 0.2s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 }
